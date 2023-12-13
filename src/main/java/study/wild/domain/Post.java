@@ -9,7 +9,7 @@ import java.util.List;
 
 @Entity
 @Getter
-public class Post extends BaseTimeEntity{
+public class Post extends BaseTimeEntity {
     @Id
     @GeneratedValue
     @Column(name = "post_id")
@@ -22,7 +22,7 @@ public class Post extends BaseTimeEntity{
     @OneToMany(mappedBy = "post")
     private List<Comment> comments = new ArrayList<>();
 
-    @OneToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "category_id")
     private Category category;
 

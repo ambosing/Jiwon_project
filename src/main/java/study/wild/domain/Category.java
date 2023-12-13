@@ -3,9 +3,12 @@ package study.wild.domain;
 import jakarta.persistence.*;
 import lombok.Getter;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Entity
 @Getter
-public class Category extends BaseTimeEntity{
+public class Category extends BaseTimeEntity {
     @Id
     @GeneratedValue
     @Column(name = "category_id")
@@ -13,6 +16,7 @@ public class Category extends BaseTimeEntity{
 
     private String name;
 
-    @OneToOne(mappedBy = "category")
-    private Post post;
+    @OneToMany(mappedBy = "category")
+    private List<Post> post = new ArrayList<>();
+    
 }
