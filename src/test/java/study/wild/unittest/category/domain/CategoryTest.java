@@ -57,6 +57,6 @@ class CategoryTest {
         //then
         assertThat(deleteTest.getId()).isEqualTo(30L);
         assertThat(deleteTest.getName().name()).isEqualTo("PreDelete");
-        assertThat(deleteTest.getDeleteDate().compareTo(deleteDate)).isZero();
+        assertThat(deleteTest.getDeletedDate().compareTo(deleteDate)).isZero();
     }
 }

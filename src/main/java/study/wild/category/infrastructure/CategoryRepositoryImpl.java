@@ -17,7 +17,7 @@ public class CategoryRepositoryImpl implements CategoryRepository {
     @Override
     public Category getById(Long id) {
         return categoryJpaRepository
-                .findByIdAndDeleteDateIsNull(id)
+                .findByIdAndDeletedDateIsNull(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Category", id)).toDomain();
     }
 

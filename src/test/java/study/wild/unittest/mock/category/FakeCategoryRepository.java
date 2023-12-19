@@ -31,7 +31,7 @@ public class FakeCategoryRepository implements CategoryRepository {
                         existingCategory.update(CategoryUpdate
                                 .builder()
                                 .name(category.getName().name())
-                                .deleteDateTime(category.getDeleteDate())
+                                .deleteDateTime(category.getDeletedDate())
                                 .build());
                         return existingCategory;
                     })
@@ -42,7 +42,7 @@ public class FakeCategoryRepository implements CategoryRepository {
     @Override
     public Category getById(Long id) {
         return data.stream()
-                .filter(item -> item.getId().equals(id) && item.getDeleteDate() == null)
+                .filter(item -> item.getId().equals(id) && item.getDeletedDate() == null)
                 .findAny()
                 .orElseThrow(() -> new ResourceNotFoundException("Category", id));
     }

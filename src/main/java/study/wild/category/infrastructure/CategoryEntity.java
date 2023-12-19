@@ -19,7 +19,7 @@ import java.util.List;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class CategoryEntity extends BaseTimeEntity {
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "category_id")
     private Long id;
 
@@ -30,19 +30,18 @@ public class CategoryEntity extends BaseTimeEntity {
     private final List<PostEntity> post = new ArrayList<>();
 
     @Column
-    private LocalDateTime deleteDate;
+    private LocalDateTime deletedDate;
 
     @Builder
-    private CategoryEntity(Long id, String name, LocalDateTime deleteDate) {
-        this.id = id;
+    private CategoryEntity(String name, LocalDateTime deletedDate) {
         this.name = name;
-        this.deleteDate = deleteDate;
+        this.deletedDate = deletedDate;
     }
 
     public static CategoryEntity from(Category category) {
         return CategoryEntity.builder()
-                .id(category.getId())
                 .name(category.getName().name())
+                .deletedDate(category.getDeletedDate())
                 .build();
     }
 

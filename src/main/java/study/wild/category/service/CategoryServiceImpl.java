@@ -15,6 +15,7 @@ import java.util.List;
 
 @Service
 @Builder
+@Transactional(readOnly = true)
 @RequiredArgsConstructor
 public class CategoryServiceImpl implements CategoryService {
 

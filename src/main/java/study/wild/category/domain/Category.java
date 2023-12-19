@@ -17,13 +17,13 @@ public class Category {
     private Long id;
     private CategoryName name;
     private List<Post> post = new ArrayList<>();
-    private LocalDateTime deleteDate;
+    private LocalDateTime deletedDate;
 
     @Builder
-    private Category(Long id, String name, LocalDateTime deleteDate) {
+    private Category(Long id, String name, LocalDateTime deletedDate) {
         this.id = id;
         this.name = new CategoryName(name);
-        this.deleteDate = deleteDate;
+        this.deletedDate = deletedDate;
     }
 
     public static Category fromCreate(CategoryCreate categoryCreate) {
@@ -36,11 +36,11 @@ public class Category {
         this.name = CategoryName.builder()
                 .name(categoryUpdate.getName())
                 .build();
-        this.deleteDate = categoryUpdate.getDeleteDateTime();
+        this.deletedDate = categoryUpdate.getDeleteDateTime();
         return this;
     }
 
     public void delete(LocalDateTime deleteDate) {
-        this.deleteDate = deleteDate;
+        this.deletedDate = deleteDate;
     }
 }
