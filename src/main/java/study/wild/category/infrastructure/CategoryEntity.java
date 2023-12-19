@@ -33,13 +33,15 @@ public class CategoryEntity extends BaseTimeEntity {
     private LocalDateTime deletedDate;
 
     @Builder
-    private CategoryEntity(String name, LocalDateTime deletedDate) {
+    private CategoryEntity(Long id, String name, LocalDateTime deletedDate) {
+        this.id = id;
         this.name = name;
         this.deletedDate = deletedDate;
     }
 
     public static CategoryEntity from(Category category) {
         return CategoryEntity.builder()
+                .id(category.getId())
                 .name(category.getName().name())
                 .deletedDate(category.getDeletedDate())
                 .build();

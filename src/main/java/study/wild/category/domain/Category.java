@@ -32,7 +32,8 @@ public class Category {
                 .build();
     }
 
-    public Category update(CategoryUpdate categoryUpdate) {
+    public Category update(Long id, CategoryUpdate categoryUpdate) {
+        this.id = id;
         this.name = CategoryName.builder()
                 .name(categoryUpdate.getName())
                 .build();

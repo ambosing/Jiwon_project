@@ -28,7 +28,7 @@ public class FakeCategoryRepository implements CategoryRepository {
                     .filter(item -> item.getId().equals(category.getId()))
                     .findFirst()
                     .map(existingCategory -> {
-                        existingCategory.update(CategoryUpdate
+                        existingCategory.update(category.getId(), CategoryUpdate
                                 .builder()
                                 .name(category.getName().name())
                                 .deleteDateTime(category.getDeletedDate())

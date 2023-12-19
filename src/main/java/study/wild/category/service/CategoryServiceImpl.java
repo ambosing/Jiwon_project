@@ -2,6 +2,7 @@ package study.wild.category.service;
 
 import lombok.Builder;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import study.wild.category.controller.port.CategoryService;
@@ -13,6 +14,7 @@ import study.wild.common.service.DatetimeHolder;
 
 import java.util.List;
 
+@Slf4j
 @Service
 @Builder
 @Transactional(readOnly = true)
@@ -42,7 +44,7 @@ public class CategoryServiceImpl implements CategoryService {
     @Transactional
     public Category update(Long id, CategoryUpdate categoryUpdate) {
         Category category = getById(id);
-        category = category.update(categoryUpdate);
+        category = category.update(id, categoryUpdate);
         return categoryRepository.save(category);
     }
 

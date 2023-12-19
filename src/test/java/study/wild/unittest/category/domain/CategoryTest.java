@@ -37,7 +37,7 @@ class CategoryTest {
                 .name("PreUpdate")
                 .build();
         //when
-        Category updatedCategory = preUpdate.update(updateTest);
+        Category updatedCategory = preUpdate.update(30L, updateTest);
         //then
         assertThat(updatedCategory.getId()).isEqualTo(30L);
         assertThat(updatedCategory.getName().name()).isEqualTo("UpdateTest");
