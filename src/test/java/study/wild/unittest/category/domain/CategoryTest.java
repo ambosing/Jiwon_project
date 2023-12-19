@@ -3,8 +3,8 @@ package study.wild.unittest.category.domain;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import study.wild.category.domain.Category;
-import study.wild.category.service.dto.CategoryCreate;
-import study.wild.category.service.dto.CategoryUpdate;
+import study.wild.category.domain.CategoryCreate;
+import study.wild.category.domain.CategoryUpdate;
 
 import java.time.LocalDateTime;
 

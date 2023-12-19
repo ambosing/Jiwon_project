@@ -11,8 +11,8 @@ import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.jdbc.SqlGroup;
 import org.springframework.test.web.servlet.MockMvc;
-import study.wild.category.service.dto.CategoryCreate;
-import study.wild.category.service.dto.CategoryUpdate;
+import study.wild.category.domain.CategoryCreate;
+import study.wild.category.domain.CategoryUpdate;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;

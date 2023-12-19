@@ -3,8 +3,6 @@ package study.wild.category.domain;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.ToString;
-import study.wild.category.service.dto.CategoryCreate;
-import study.wild.category.service.dto.CategoryUpdate;
 import study.wild.post.domain.Post;
 
 import java.time.LocalDateTime;

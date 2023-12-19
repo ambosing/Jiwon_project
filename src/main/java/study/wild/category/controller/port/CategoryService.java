@@ -1,8 +1,8 @@
 package study.wild.category.controller.port;
 
 import study.wild.category.domain.Category;
-import study.wild.category.service.dto.CategoryCreate;
-import study.wild.category.service.dto.CategoryUpdate;
+import study.wild.category.domain.CategoryCreate;
+import study.wild.category.domain.CategoryUpdate;
 
 import java.util.List;
 

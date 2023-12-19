@@ -1,4 +1,4 @@
-package study.wild.category.service.dto;
+package study.wild.category.domain;
 
 import jakarta.validation.constraints.NotBlank;
 import lombok.Builder;

@@ -1,5 +1,6 @@
 package study.wild.category.controller;
 
+import jakarta.validation.Valid;
 import lombok.Builder;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -7,8 +8,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import study.wild.category.controller.port.CategoryService;
 import study.wild.category.controller.response.CategoryResponse;
-import study.wild.category.service.dto.CategoryCreate;
-import study.wild.category.service.dto.CategoryUpdate;
+import study.wild.category.domain.CategoryCreate;
+import study.wild.category.domain.CategoryUpdate;
 
 import java.util.List;
 
@@ -38,7 +39,7 @@ public class CategoryController {
     }
 
     @PostMapping
-    public ResponseEntity<CategoryResponse> create(@RequestBody CategoryCreate categoryCreate) {
+    public ResponseEntity<CategoryResponse> create(@Valid @RequestBody CategoryCreate categoryCreate) {
         return ResponseEntity
                 .status(HttpStatus.CREATED)
                 .body(CategoryResponse.from(categoryService.create(categoryCreate)));
@@ -46,7 +47,7 @@ public class CategoryController {
 
     @PatchMapping("/{id}")
     public ResponseEntity<CategoryResponse> update(@PathVariable("id") Long id,
-                                                   @RequestBody CategoryUpdate categoryUpdate) {
+                                                   @Valid @RequestBody CategoryUpdate categoryUpdate) {
         return ResponseEntity.ok()
                 .body(CategoryResponse.from(categoryService.update(id, categoryUpdate)));
     }

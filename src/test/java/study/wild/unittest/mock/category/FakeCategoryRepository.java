@@ -1,7 +1,7 @@
 package study.wild.unittest.mock.category;
 
 import study.wild.category.domain.Category;
-import study.wild.category.service.dto.CategoryUpdate;
+import study.wild.category.domain.CategoryUpdate;
 import study.wild.category.service.port.CategoryRepository;
 import study.wild.common.domain.ResourceNotFoundException;
 
