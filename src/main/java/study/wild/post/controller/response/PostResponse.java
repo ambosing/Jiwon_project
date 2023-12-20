@@ -1,43 +1,39 @@
-package study.wild.post.domain;
+package study.wild.post.controller.response;
 
 import lombok.Builder;
 import lombok.Getter;
-import lombok.Setter;
 import study.wild.category.domain.Category;
 import study.wild.comment.infrastructure.Comment;
+import study.wild.post.domain.Post;
 
-import java.time.LocalDateTime;
 import java.util.List;
 
 @Getter
-@Setter
-public class Post {
+public class PostResponse {
     private final Long id;
     private final String title;
     private final String content;
     private final Long view;
     private final List<Comment> comments;
     private final Category category;
-    private final LocalDateTime deletedDate;
-
 
     @Builder
-    public Post(Long id, String title, String content, Long view, List<Comment> comments, Category category, LocalDateTime deletedDate) {
+    public PostResponse(Long id, String title, String content, Long view, List<Comment> comments, Category category) {
         this.id = id;
         this.title = title;
         this.content = content;
         this.view = view;
         this.comments = comments;
         this.category = category;
-        this.deletedDate = deletedDate;
     }
 
-    public static Post fromCreate(Category category, PostCreate postCreate) {
-        return Post.builder()
-                .title(postCreate.getTitle())
-                .content(postCreate.getContent())
-                .view(0L)
-                .category(category)
+    public static PostResponse from(Post post) {
+        return PostResponse.builder()
+                .content(post.getContent())
+                .view(post.getView())
+                .title(post.getTitle())
+                .category(post.getCategory())
+                .comments(post.getComments())
                 .build();
     }
 }
