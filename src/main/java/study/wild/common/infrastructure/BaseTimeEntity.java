@@ -1,4 +1,4 @@
-package study.wild.domain;
+package study.wild.common.infrastructure;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.EntityListeners;
@@ -13,12 +13,11 @@ import java.time.LocalDateTime;
 @EntityListeners(AuditingEntityListener.class)
 @MappedSuperclass
 @Getter
-public class BaseTimeEntity {
+public abstract class BaseTimeEntity {
     @CreatedDate
     @Column(updatable = false)
     private LocalDateTime createdDate;
 
     @LastModifiedBy
     private LocalDateTime lastModifiedDate;
-
 }
