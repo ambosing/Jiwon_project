@@ -116,7 +116,7 @@ class CategoryControllerTest {
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(updateTest)))
                 .andExpect(status().isBadRequest())
-                .andExpect(content().string("이름을 입력해주세요."));
+                .andExpect(jsonPath("$.name").value("이름을 입력해주세요."));
     }
 
     @Test
@@ -132,7 +132,7 @@ class CategoryControllerTest {
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(updateTest)))
                 .andExpect(status().isBadRequest())
-                .andExpect(content().string("이름을 입력해주세요."));
+                .andExpect(jsonPath("$.name").value("이름을 입력해주세요."));
     }
 
     @Test

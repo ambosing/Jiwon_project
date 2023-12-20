@@ -10,7 +10,7 @@ import java.time.LocalDateTime;
 @Getter
 @NoArgsConstructor
 public class CategoryUpdate {
-    @NotBlank
+    @NotBlank(message = "이름을 입력해주세요.")
     String name;
 
     LocalDateTime deleteDateTime;

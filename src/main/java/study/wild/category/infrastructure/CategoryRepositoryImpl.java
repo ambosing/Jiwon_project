@@ -24,7 +24,7 @@ public class CategoryRepositoryImpl implements CategoryRepository {
     @Override
     public List<Category> findAll() {
         return categoryJpaRepository
-                .findAll()
+                .findAllByDeletedDateIsNull()
                 .stream().map(CategoryEntity::toDomain)
                 .toList();
     }
