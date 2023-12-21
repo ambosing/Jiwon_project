@@ -55,11 +55,11 @@ public class PostEntity extends BaseTimeEntity {
 
     public static PostEntity from(Post post) {
         return PostEntity.builder()
-                .title(post.getTitle())
+                .title(post.getTitle().title())
                 .category(CategoryEntity.from(post.getCategory()))
                 .comments(post.getComments())
                 .deletedDate(post.getDeletedDate())
-                .content(post.getContent())
+                .content(post.getContent().content())
                 .view(post.getView())
                 .build();
     }

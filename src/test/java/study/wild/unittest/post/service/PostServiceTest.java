@@ -40,7 +40,7 @@ class PostServiceTest {
                 .build();
         fakeCategoryRepository.save(category1);
         fakeCategoryRepository.save(category2);
-
+        
         fakePostRepository.save(
                 Post.builder()
                         .view(1L)
@@ -99,8 +99,8 @@ class PostServiceTest {
         Post savedPost = postService.create(postCreate);
         //then
         assertThat(savedPost.getId()).isEqualTo(3L);
-        assertThat(savedPost.getTitle()).isEqualTo("createTitle");
-        assertThat(savedPost.getContent()).isEqualTo("createContent");
+        assertThat(savedPost.getTitle().title()).isEqualTo("createTitle");
+        assertThat(savedPost.getContent().content()).isEqualTo("createContent");
         assertThat(savedPost.getCategory().getName().name()).isEqualTo("category1");
         assertThat(savedPost.getView()).isEqualTo(0L);
     }

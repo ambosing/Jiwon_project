@@ -31,12 +31,11 @@ public class Category {
     }
 
     public Category update(Long id, CategoryUpdate categoryUpdate) {
-        this.id = id;
-        this.name = CategoryName.builder()
+        return Category.builder()
+                .id(id)
                 .name(categoryUpdate.getName())
+                .deletedDate(categoryUpdate.deleteDateTime)
                 .build();
-        this.deletedDate = categoryUpdate.getDeleteDateTime();
-        return this;
     }
 
     public void delete(LocalDateTime deleteDate) {

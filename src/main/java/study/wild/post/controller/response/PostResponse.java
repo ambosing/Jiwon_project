@@ -2,23 +2,25 @@ package study.wild.post.controller.response;
 
 import lombok.Builder;
 import lombok.Getter;
-import study.wild.category.domain.Category;
+import lombok.NoArgsConstructor;
+import study.wild.category.controller.response.CategoryResponse;
 import study.wild.comment.infrastructure.Comment;
 import study.wild.post.domain.Post;
 
 import java.util.List;
 
 @Getter
+@NoArgsConstructor
 public class PostResponse {
-    private final Long id;
-    private final String title;
-    private final String content;
-    private final Long view;
-    private final List<Comment> comments;
-    private final Category category;
+    private Long id;
+    private String title;
+    private String content;
+    private Long view;
+    private List<Comment> comments;
+    private CategoryResponse category;
 
     @Builder
-    public PostResponse(Long id, String title, String content, Long view, List<Comment> comments, Category category) {
+    public PostResponse(Long id, String title, String content, Long view, List<Comment> comments, CategoryResponse category) {
         this.id = id;
         this.title = title;
         this.content = content;
@@ -29,10 +31,10 @@ public class PostResponse {
 
     public static PostResponse from(Post post) {
         return PostResponse.builder()
-                .content(post.getContent())
+                .content(post.getContent().content())
                 .view(post.getView())
-                .title(post.getTitle())
-                .category(post.getCategory())
+                .title(post.getTitle().title())
+                .category(CategoryResponse.from(post.getCategory()))
                 .comments(post.getComments())
                 .build();
     }

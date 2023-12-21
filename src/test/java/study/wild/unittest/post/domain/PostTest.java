@@ -27,8 +27,9 @@ class PostTest {
         Post post = Post.fromCreate(category, postCreate);
         //then
         assertThat(post).isNotNull();
-        assertThat(post.getTitle()).isEqualTo("title");
-        assertThat(post.getContent()).isEqualTo("content");
+        assertThat(post.getTitle().title()).isEqualTo("title");
+        assertThat(post.getContent().content()).isEqualTo("content");
         assertThat(post.getCategory().getName().name()).isEqualTo("category");
+        assertThat(post.getView()).isEqualTo(0L);
     }
 }

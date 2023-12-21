@@ -13,19 +13,22 @@ import java.util.List;
 @Setter
 public class Post {
     private final Long id;
-    private final String title;
-    private final String content;
+    private final PostTitle title;
+    private final PostContent content;
     private final Long view;
     private final List<Comment> comments;
     private final Category category;
     private final LocalDateTime deletedDate;
 
-
     @Builder
     public Post(Long id, String title, String content, Long view, List<Comment> comments, Category category, LocalDateTime deletedDate) {
         this.id = id;
-        this.title = title;
-        this.content = content;
+        this.title = PostTitle.builder()
+                .title(title)
+                .build();
+        this.content = PostContent.builder()
+                .content(content)
+                .build();
         this.view = view;
         this.comments = comments;
         this.category = category;
@@ -40,4 +43,5 @@ public class Post {
                 .category(category)
                 .build();
     }
+
 }
