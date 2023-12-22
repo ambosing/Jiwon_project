@@ -1,57 +1,44 @@
-package study.wild.unittest.post.service;
+package study.wild.integrationtest.post.service;
 
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.TestPropertySource;
+import org.springframework.test.context.jdbc.Sql;
+import org.springframework.test.context.jdbc.SqlGroup;
 import study.wild.category.domain.Category;
 import study.wild.category.service.port.CategoryRepository;
 import study.wild.common.domain.ResourceNotFoundException;
 import study.wild.post.controller.port.PostService;
 import study.wild.post.domain.Post;
 import study.wild.post.domain.PostCreate;
-import study.wild.post.service.PostServiceImpl;
 import study.wild.post.service.port.PostRepository;
-import study.wild.unittest.mock.category.FakeCategoryRepository;
-import study.wild.unittest.mock.post.FakePostRepository;
 
 import java.time.LocalDateTime;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
+@SpringBootTest
+@TestPropertySource("classpath:test-application.properties")
+@SqlGroup({
+        @Sql(value = "/sql/post/post-service-test-data.sql", executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD),
+        @Sql(value = "/sql/delete-all-data.sql", executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
+})
 class PostServiceTest {
+    @Autowired
     private PostService postService;
+    @Autowired
     private PostRepository postRepository;
+    @Autowired
     private CategoryRepository categoryRepository;
-
-    @BeforeEach
-    void setUp() {
-        postRepository = new FakePostRepository();
-        categoryRepository = new FakeCategoryRepository();
-        postService = PostServiceImpl.builder()
-                .datetimeHolder(() -> LocalDateTime.of(2023, 12, 25, 0, 0))
-                .postRepository(postRepository)
-                .categoryRepository(categoryRepository)
-                .build();
-    }
 
     @Test
     @DisplayName("id로 Post를 조회할 수 있다.")
     void id로_Post_를_조회할_수_있다() {
         //given
         Long id = 1L;
-        Category category1 = Category.builder()
-                .name("category1")
-                .build();
-        categoryRepository.save(category1);
-        postRepository.save(
-                Post.builder()
-                        .view(1L)
-                        .title("title1")
-                        .content("content1")
-                        .category(category1)
-                        .build()
-        );
         //when
         Post findPost = postService.getById(id);
         //then
@@ -59,7 +46,7 @@ class PostServiceTest {
         assertThat(findPost.getTitle().title()).isEqualTo("title1");
         assertThat(findPost.getContent().content()).isEqualTo("content1");
         assertThat(findPost.getCategory().getName().name()).isEqualTo("category1");
-        assertThat(findPost.getView()).isEqualTo(1L);
+        assertThat(findPost.getView()).isEqualTo(0L);
     }
 
     @Test
@@ -82,15 +69,14 @@ class PostServiceTest {
                 .name("category1")
                 .build();
         categoryRepository.save(category1);
-        Post post = postRepository.save(
-                Post.builder()
-                        .view(1L)
-                        .title("title1")
-                        .content("content1")
-                        .category(category1)
-                        .deletedDate(LocalDateTime.of(2023, 12, 25, 0, 0))
-                        .build()
-        );
+        Post createPost = Post.builder()
+                .view(1L)
+                .title("title1")
+                .content("content1")
+                .category(category1)
+                .deletedDate(LocalDateTime.of(2023, 12, 25, 0, 0))
+                .build();
+        Post post = postRepository.save(createPost);
         Post savedPost = postRepository.save(post);
         //when
         //then
@@ -103,14 +89,10 @@ class PostServiceTest {
     @DisplayName("postCreate로 새로운 Post를 생성할 수 있다")
     void postCreate로_새로운_Post를_생성할_수_있다() {
         //given
-        Category category1 = Category.builder()
-                .name("category1")
-                .build();
-        Category category = categoryRepository.save(category1);
         PostCreate postCreate = PostCreate.builder()
                 .title("createTitle")
                 .content("createContent")
-                .categoryId(category.getId())
+                .categoryId(1L)
                 .build();
         //when
         Post savedPost = postService.create(postCreate);
@@ -129,13 +111,13 @@ class PostServiceTest {
         Category category1 = Category.builder()
                 .name("category1")
                 .build();
-        categoryRepository.save(category1);
+        Category category = categoryRepository.save(category1);
         Post savedPost = postRepository.save(
                 Post.builder()
                         .view(1L)
                         .title("title1")
                         .content("content1")
-                        .category(category1)
+                        .category(category)
                         .build()
         );
         //when

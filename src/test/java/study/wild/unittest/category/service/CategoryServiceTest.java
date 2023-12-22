@@ -8,6 +8,7 @@ import study.wild.category.domain.Category;
 import study.wild.category.domain.CategoryCreate;
 import study.wild.category.domain.CategoryUpdate;
 import study.wild.category.service.CategoryServiceImpl;
+import study.wild.category.service.port.CategoryRepository;
 import study.wild.common.domain.ResourceNotFoundException;
 import study.wild.unittest.mock.category.FakeCategoryRepository;
 import study.wild.unittest.mock.common.TestDateTimeHolder;
@@ -21,22 +22,23 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 public class CategoryServiceTest {
 
     private CategoryService categoryService;
+    private CategoryRepository categoryRepository;
 
     @BeforeEach
     void init() {
-        FakeCategoryRepository fakeCategoryRepository = new FakeCategoryRepository();
+        categoryRepository = new FakeCategoryRepository();
 
         categoryService = CategoryServiceImpl.builder()
-                .categoryRepository(fakeCategoryRepository)
+                .categoryRepository(categoryRepository)
                 .datetimeHolder(new TestDateTimeHolder(LocalDateTime.MAX))
                 .build();
 
-        fakeCategoryRepository.save(
+        categoryRepository.save(
                 Category.builder()
                         .name("test1")
                         .build()
         );
-        fakeCategoryRepository.save(
+        categoryRepository.save(
                 Category.builder()
                         .name("test2")
                         .build()
@@ -77,6 +79,24 @@ public class CategoryServiceTest {
         assertThatThrownBy(() -> categoryService.getById(id))
                 .isInstanceOf(ResourceNotFoundException.class)
                 .hasMessage("Category에서 ID 123456789를 찾을 수 없습니다.");
+    }
+
+    @Test
+    @DisplayName("삭제된 카테고리는 가져올 수 없다")
+    void 삭제된_카테고리는_가져올_수_없다() {
+        //give
+        long deletedId = 1L;
+        Category deletedCategory = Category.builder()
+                .id(deletedId)
+                .name("deletedCategory")
+                .deletedDate(LocalDateTime.now())
+                .build();
+        Category category = categoryRepository.save(deletedCategory);
+        //when
+        //then
+        assertThatThrownBy(() -> categoryService.getById(category.getId()))
+                .isInstanceOf(ResourceNotFoundException.class)
+                .hasMessage(String.format("Category에서 ID %s를 찾을 수 없습니다.", deletedId));
     }
 
     @Test

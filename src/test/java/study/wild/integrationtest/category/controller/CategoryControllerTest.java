@@ -46,8 +46,8 @@ class CategoryControllerTest {
     }
 
     @Test
-    @DisplayName("사용자는 카테고리를 단건만 조회할 수 있다")
-    void 사용자는_카테고리를_단건만_조회할_수_있다() throws Exception {
+    @DisplayName("사용자는 카테고리를 단건 조회할 수 있다")
+    void 사용자는_카테고리를_단건_조회할_수_있다() throws Exception {
         //given
         //when
         //then
@@ -66,6 +66,17 @@ class CategoryControllerTest {
         mockMvc.perform(get("/categories/123456789"))
                 .andExpect(status().isNotFound())
                 .andExpect(content().string("Category에서 ID 123456789를 찾을 수 없습니다."));
+    }
+
+    @Test
+    @DisplayName("사용자는 삭제한 카테고리를 조회할 경우 에러에 마주한다")
+    void 사용자는_삭제한_카테고리를_조회할_경우_에러에_마주한다() throws Exception {
+        //given
+        //when
+        //then
+        mockMvc.perform(get("/categories/3"))
+                .andExpect(status().isNotFound())
+                .andExpect(content().string("Category에서 ID 3를 찾을 수 없습니다."));
     }
 
     @Test

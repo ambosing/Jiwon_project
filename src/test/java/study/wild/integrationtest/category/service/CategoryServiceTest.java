@@ -11,8 +11,10 @@ import study.wild.category.controller.port.CategoryService;
 import study.wild.category.domain.Category;
 import study.wild.category.domain.CategoryCreate;
 import study.wild.category.domain.CategoryUpdate;
+import study.wild.category.service.port.CategoryRepository;
 import study.wild.common.domain.ResourceNotFoundException;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -28,6 +30,8 @@ import static org.assertj.core.groups.Tuple.tuple;
 class CategoryServiceTest {
     @Autowired
     private CategoryService categoryService;
+    @Autowired
+    private CategoryRepository categoryRepository;
 
     @Test
     @DisplayName("카테고리를 모두 조회할 수 있다")
@@ -65,6 +69,24 @@ class CategoryServiceTest {
         assertThatThrownBy(() -> categoryService.getById(id))
                 .isInstanceOf(ResourceNotFoundException.class)
                 .hasMessage("Category에서 ID 123456789를 찾을 수 없습니다.");
+    }
+
+    @Test
+    @DisplayName("삭제된 카테고리는 가져올 수 없다")
+    void 삭제된_카테고리는_가져올_수_없다() {
+        //give
+        long deletedId = 1L;
+        Category deletedCategory = Category.builder()
+                .id(deletedId)
+                .name("deletedCategory")
+                .deletedDate(LocalDateTime.now())
+                .build();
+        Category category = categoryRepository.save(deletedCategory);
+        //when
+        //then
+        assertThatThrownBy(() -> categoryService.getById(category.getId()))
+                .isInstanceOf(ResourceNotFoundException.class)
+                .hasMessage(String.format("Category에서 ID %s를 찾을 수 없습니다.", deletedId));
     }
 
     @Test

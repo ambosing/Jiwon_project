@@ -5,8 +5,10 @@ import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.ColumnDefault;
 import study.wild.category.infrastructure.CategoryEntity;
-import study.wild.comment.infrastructure.Comment;
+import study.wild.comment.domain.Comment;
+import study.wild.comment.infrastructure.CommentEntity;
 import study.wild.common.infrastructure.BaseTimeEntity;
 import study.wild.post.domain.Post;
 
@@ -20,7 +22,7 @@ import java.util.List;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class PostEntity extends BaseTimeEntity {
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "post_id")
     private Long id;
 
@@ -29,12 +31,13 @@ public class PostEntity extends BaseTimeEntity {
     @Column(nullable = false, columnDefinition = "TEXT")
     private String content;
     @Column(nullable = false)
+    @ColumnDefault("0")
     private Long view;
 
     @OneToMany(mappedBy = "post")
-    private List<Comment> comments = new ArrayList<>();
+    private List<CommentEntity> comments = new ArrayList<>();
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinColumn(name = "category_id")
     private CategoryEntity category;
 
@@ -43,7 +46,7 @@ public class PostEntity extends BaseTimeEntity {
 
 
     @Builder
-    public PostEntity(Long id, String title, String content, Long view, List<Comment> comments, CategoryEntity category, LocalDateTime deletedDate) {
+    public PostEntity(Long id, String title, String content, Long view, List<CommentEntity> comments, CategoryEntity category, LocalDateTime deletedDate) {
         this.id = id;
         this.title = title;
         this.content = content;
@@ -54,10 +57,13 @@ public class PostEntity extends BaseTimeEntity {
     }
 
     public static PostEntity from(Post post) {
+        List<CommentEntity> commentsEntity = post.getComments().stream()
+                .map(CommentEntity::from)
+                .toList();
         return PostEntity.builder()
                 .title(post.getTitle().title())
                 .category(CategoryEntity.from(post.getCategory()))
-                .comments(post.getComments())
+                .comments(commentsEntity)
                 .deletedDate(post.getDeletedDate())
                 .content(post.getContent().content())
                 .view(post.getView())
@@ -65,6 +71,10 @@ public class PostEntity extends BaseTimeEntity {
     }
 
     public Post toDomain() {
+        List<Comment> comments = this.comments.stream()
+                .map(CommentEntity::toDomain)
+                .toList();
+
         return Post.builder()
                 .id(id)
                 .content(content)

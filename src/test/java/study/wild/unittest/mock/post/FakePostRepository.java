@@ -6,6 +6,7 @@ import study.wild.post.service.port.PostRepository;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 public class FakePostRepository implements PostRepository {
     private Long id = 0L;
@@ -34,6 +35,8 @@ public class FakePostRepository implements PostRepository {
             data.add(newPost);
             return newPost;
         } else {
+            data.removeIf(item -> Objects.equals(item.getId(), post.getId()));
+            data.add(post);
             return post;
         }
     }
@@ -43,8 +46,4 @@ public class FakePostRepository implements PostRepository {
         return null;
     }
 
-    @Override
-    public Long delete(Long id) {
-        return null;
-    }
 }

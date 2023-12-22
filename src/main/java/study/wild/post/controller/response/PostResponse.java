@@ -4,7 +4,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import study.wild.category.controller.response.CategoryResponse;
-import study.wild.comment.infrastructure.Comment;
+import study.wild.comment.domain.Comment;
 import study.wild.post.domain.Post;
 
 import java.util.List;

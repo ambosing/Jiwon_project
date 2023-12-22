@@ -9,6 +9,4 @@ public interface PostRepository {
 
     Post update(Long id, Post post);
 
-    Long delete(Long id);
-
 }

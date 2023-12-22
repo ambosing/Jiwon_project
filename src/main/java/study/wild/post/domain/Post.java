@@ -4,7 +4,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 import study.wild.category.domain.Category;
-import study.wild.comment.infrastructure.Comment;
+import study.wild.comment.domain.Comment;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -12,13 +12,13 @@ import java.util.List;
 @Getter
 @Setter
 public class Post {
-    private final Long id;
-    private final PostTitle title;
-    private final PostContent content;
-    private final Long view;
-    private final List<Comment> comments;
-    private final Category category;
-    private final LocalDateTime deletedDate;
+    private Long id;
+    private PostTitle title;
+    private PostContent content;
+    private Long view;
+    private List<Comment> comments;
+    private Category category;
+    private LocalDateTime deletedDate;
 
     @Builder
     public Post(Long id, String title, String content, Long view, List<Comment> comments, Category category, LocalDateTime deletedDate) {
@@ -44,4 +44,7 @@ public class Post {
                 .build();
     }
 
+    public void delete(LocalDateTime deletedDate) {
+        this.deletedDate = deletedDate;
+    }
 }

@@ -13,21 +13,21 @@ public class PostRepositoryImpl implements PostRepository {
 
     @Override
     public Post getById(Long id) {
-        return postJpaRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Post", id)).toDomain();
+        return postJpaRepository
+                .findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Post", id))
+                .toDomain();
     }
 
     @Override
     public Post save(Post post) {
-        return null;
+        return postJpaRepository
+                .save(PostEntity.from(post))
+                .toDomain();
     }
 
     @Override
     public Post update(Long id, Post post) {
-        return null;
-    }
-
-    @Override
-    public Long delete(Long id) {
         return null;
     }
 

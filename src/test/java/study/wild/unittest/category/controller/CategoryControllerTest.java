@@ -41,8 +41,8 @@ class CategoryControllerTest {
     }
 
     @Test
-    @DisplayName("사용자는 카테고리를 단건만 조회할 수 있다")
-    void 사용자는_카테고리를_단건만_조회할_수_있다() throws Exception {
+    @DisplayName("사용자는 카테고리를 단건 조회할 수 있다")
+    void 사용자는_카테고리를_단건_조회할_수_있다() throws Exception {
         //given
         TestCategoryContainer container = TestCategoryContainer.builder().build();
         container.categoryRepository.save(Category.builder()
@@ -63,6 +63,25 @@ class CategoryControllerTest {
     void 사용자는_없는_카테고리를_조회할_경우_에러가_발생한다() throws Exception {
         //given
         TestCategoryContainer container = TestCategoryContainer.builder().build();
+        //when
+        //then
+        assertThatThrownBy(() -> container.categoryController.getById(1L))
+                .isInstanceOf(ResourceNotFoundException.class)
+                .hasMessage("Category에서 ID 1를 찾을 수 없습니다.");
+    }
+
+    @Test
+    @DisplayName("사용자는 삭제된 카테고리를 조회할 경우 에러에 마주한다")
+    void 사용자는_삭제된_카테고리를_조회할_경우_에러에_마주한다() {
+        //given
+        TestCategoryContainer container = TestCategoryContainer.builder()
+                .datetimeHolder(LocalDateTime::now)
+                .build();
+        container.categoryRepository.save(Category.builder()
+                .name("category")
+                .build()
+        );
+        container.categoryService.delete(1L);
         //when
         //then
         assertThatThrownBy(() -> container.categoryController.getById(1L))
