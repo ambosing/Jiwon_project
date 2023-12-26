@@ -41,7 +41,7 @@ public class PostServiceImpl implements PostService {
     @Transactional
     public Long delete(Long id) {
         Post findPost = getById(id);
-        findPost.delete(datetimeHolder.now());
-        return postRepository.save(findPost).getId();
+        Post deletedPost = findPost.delete(datetimeHolder.now());
+        return postRepository.save(deletedPost).getId();
     }
 }

@@ -14,7 +14,7 @@ public class PostRepositoryImpl implements PostRepository {
     @Override
     public Post getById(Long id) {
         return postJpaRepository
-                .findById(id)
+                .findByIdAndDeletedDateIsNull(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Post", id))
                 .toDomain();
     }

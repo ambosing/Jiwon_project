@@ -37,7 +37,7 @@ public class PostEntity extends BaseTimeEntity {
     @OneToMany(mappedBy = "post")
     private List<CommentEntity> comments = new ArrayList<>();
 
-    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "category_id")
     private CategoryEntity category;
 
@@ -57,10 +57,15 @@ public class PostEntity extends BaseTimeEntity {
     }
 
     public static PostEntity from(Post post) {
-        List<CommentEntity> commentsEntity = post.getComments().stream()
-                .map(CommentEntity::from)
-                .toList();
+
+        List<CommentEntity> commentsEntity = null;
+        if (post.getComments() != null) {
+            commentsEntity = post.getComments().stream()
+                    .map(CommentEntity::from)
+                    .toList();
+        }
         return PostEntity.builder()
+                .id(post.getId())
                 .title(post.getTitle().title())
                 .category(CategoryEntity.from(post.getCategory()))
                 .comments(commentsEntity)
@@ -71,9 +76,12 @@ public class PostEntity extends BaseTimeEntity {
     }
 
     public Post toDomain() {
-        List<Comment> comments = this.comments.stream()
-                .map(CommentEntity::toDomain)
-                .toList();
+        List<Comment> comments = null;
+        if (this.comments != null) {
+            comments = this.comments.stream()
+                    .map(CommentEntity::toDomain)
+                    .toList();
+        }
 
         return Post.builder()
                 .id(id)

@@ -68,21 +68,20 @@ class PostServiceTest {
         Category category1 = Category.builder()
                 .name("category1")
                 .build();
-        categoryRepository.save(category1);
-        Post createPost = Post.builder()
+        Category category = categoryRepository.save(category1);
+        Post post = Post.builder()
                 .view(1L)
                 .title("title1")
                 .content("content1")
-                .category(category1)
+                .category(category)
                 .deletedDate(LocalDateTime.of(2023, 12, 25, 0, 0))
                 .build();
-        Post post = postRepository.save(createPost);
         Post savedPost = postRepository.save(post);
         //when
         //then
         assertThatThrownBy(() -> postService.getById(savedPost.getId()))
                 .isInstanceOf(ResourceNotFoundException.class)
-                .hasMessage("Post에서 ID 1를 찾을 수 없습니다.");
+                .hasMessage("Post에서 ID %d를 찾을 수 없습니다.", savedPost.getId());
     }
 
     @Test

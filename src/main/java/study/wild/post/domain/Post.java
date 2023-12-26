@@ -12,13 +12,13 @@ import java.util.List;
 @Getter
 @Setter
 public class Post {
-    private Long id;
-    private PostTitle title;
-    private PostContent content;
-    private Long view;
-    private List<Comment> comments;
-    private Category category;
-    private LocalDateTime deletedDate;
+    private final Long id;
+    private final PostTitle title;
+    private final PostContent content;
+    private final Long view;
+    private final List<Comment> comments;
+    private final Category category;
+    private final LocalDateTime deletedDate;
 
     @Builder
     public Post(Long id, String title, String content, Long view, List<Comment> comments, Category category, LocalDateTime deletedDate) {
@@ -44,7 +44,14 @@ public class Post {
                 .build();
     }
 
-    public void delete(LocalDateTime deletedDate) {
-        this.deletedDate = deletedDate;
+    public Post delete(LocalDateTime deletedDate) {
+        return Post.builder()
+                .id(id)
+                .title(title.title())
+                .content(content.content())
+                .view(view)
+                .deletedDate(deletedDate)
+                .category(category)
+                .build();
     }
 }
