@@ -38,7 +38,11 @@ public class Category {
                 .build();
     }
 
-    public void delete(LocalDateTime deleteDate) {
-        this.deletedDate = deleteDate;
+    public Category delete(LocalDateTime deleteDate) {
+        return Category.builder()
+                .id(id)
+                .name(name.name())
+                .deletedDate(deleteDate)
+                .build();
     }
 }

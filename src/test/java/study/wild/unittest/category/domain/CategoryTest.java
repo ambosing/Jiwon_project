@@ -13,7 +13,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 class CategoryTest {
     @Test
     @DisplayName("CategoryCreate로 카테고리를 만들 수 있다")
-    void categoryCreate_로_카테고리를_만들_수_있다() throws Exception {
+    void categoryCreate_로_카테고리를_만들_수_있다() {
         //given
         CategoryCreate createTest = CategoryCreate.builder()
                 .name("CreateTest")
@@ -27,7 +27,7 @@ class CategoryTest {
 
     @Test
     @DisplayName("CategoryUpdate로 변경된 카테고리를 만들 수 있다")
-    void categoryUpdate_로_변경된_카테고리를_만들_수_있다() throws Exception {
+    void categoryUpdate_로_변경된_카테고리를_만들_수_있다() {
         //given
         CategoryUpdate updateTest = CategoryUpdate.builder()
                 .name("UpdateTest")
@@ -45,7 +45,7 @@ class CategoryTest {
 
     @Test
     @DisplayName("delete로 삭제된 날짜가 설정된 카테고리를 만들 수 있다")
-    void delete_로_삭제된_날짜를_설정된_카테고리를_만들_수_있다() throws Exception {
+    void delete_로_삭제된_날짜를_설정된_카테고리를_만들_수_있다() {
         //given
         Category deleteTest = Category.builder()
                 .id(30L)
@@ -53,10 +53,10 @@ class CategoryTest {
                 .build();
         LocalDateTime deleteDate = LocalDateTime.now();
         //when
-        deleteTest.delete(deleteDate);
+        Category deletedCategory = deleteTest.delete(deleteDate);
         //then
-        assertThat(deleteTest.getId()).isEqualTo(30L);
-        assertThat(deleteTest.getName().name()).isEqualTo("PreDelete");
-        assertThat(deleteTest.getDeletedDate().compareTo(deleteDate)).isZero();
+        assertThat(deletedCategory.getId()).isEqualTo(30L);
+        assertThat(deletedCategory.getName().name()).isEqualTo("PreDelete");
+        assertThat(deletedCategory.getDeletedDate().compareTo(deleteDate)).isZero();
     }
 }
