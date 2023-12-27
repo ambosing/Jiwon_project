@@ -5,7 +5,6 @@ import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.hibernate.annotations.ColumnDefault;
 import study.wild.category.infrastructure.CategoryEntity;
 import study.wild.comment.domain.Comment;
 import study.wild.comment.infrastructure.CommentEntity;
@@ -30,8 +29,7 @@ public class PostEntity extends BaseTimeEntity {
     private String title;
     @Column(nullable = false, columnDefinition = "TEXT")
     private String content;
-    @Column(nullable = false)
-    @ColumnDefault("0")
+    @Column(columnDefinition = "BIGINT default 0")
     private Long view;
 
     @OneToMany(mappedBy = "post")

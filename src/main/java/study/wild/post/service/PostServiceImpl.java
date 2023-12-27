@@ -13,6 +13,8 @@ import study.wild.post.domain.PostCreate;
 import study.wild.post.domain.PostUpdate;
 import study.wild.post.service.port.PostRepository;
 
+import java.util.List;
+
 @Builder
 @Service
 @Transactional(readOnly = true)
@@ -43,5 +45,10 @@ public class PostServiceImpl implements PostService {
         Post findPost = getById(id);
         Post deletedPost = findPost.delete(datetimeHolder.now());
         return postRepository.save(deletedPost).getId();
+    }
+
+    @Override
+    public List<Post> getByCategoryId(Long categoryId) {
+        return postRepository.getByCategoryId(categoryId);
     }
 }

@@ -7,6 +7,7 @@ import study.wild.post.service.port.PostRepository;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 public class FakePostRepository implements PostRepository {
     private Long id = 0L;
@@ -46,4 +47,10 @@ public class FakePostRepository implements PostRepository {
         return null;
     }
 
+    @Override
+    public List<Post> getByCategoryId(Long categoryId) {
+        return data.stream()
+                .filter(item -> Objects.equals(item.getCategory().getId(), categoryId))
+                .collect(Collectors.toList());
+    }
 }

@@ -15,9 +15,11 @@ import study.wild.unittest.mock.category.FakeCategoryRepository;
 import study.wild.unittest.mock.post.FakePostRepository;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.assertj.core.groups.Tuple.tuple;
 
 class PostServiceTest {
     private PostService postService;
@@ -60,6 +62,38 @@ class PostServiceTest {
         assertThat(findPost.getContent().content()).isEqualTo("content1");
         assertThat(findPost.getCategory().getName().name()).isEqualTo("category1");
         assertThat(findPost.getView()).isEqualTo(1L);
+    }
+
+    @Test
+    @DisplayName("해당 카테고리에 맞는 Post들을 조회할 수 있다")
+    void 해당_카테고리에_맞는_Post들을_조회할_수_있다() {
+        //given
+        Category category = Category.builder()
+                .name("category1")
+                .build();
+        Category category1 = categoryRepository.save(category);
+
+        Post post1 = Post.builder()
+                .title("title1")
+                .content("content1")
+                .category(category1)
+                .build();
+        Post post2 = Post.builder()
+                .title("title2")
+                .content("content2")
+                .category(category1)
+                .build();
+        postRepository.save(post1);
+        postRepository.save(post2);
+        //when
+        List<Post> posts = postService.getByCategoryId(category1.getId());
+        //then
+        assertThat(posts).hasSize(2)
+                .extracting(post -> post.getTitle().title(), post -> post.getContent().content())
+                .containsExactlyInAnyOrder(
+                        tuple("title1", "content1"),
+                        tuple("title2", "content2")
+                );
     }
 
     @Test

@@ -16,9 +16,11 @@ import study.wild.post.domain.PostCreate;
 import study.wild.post.service.port.PostRepository;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.assertj.core.groups.Tuple.tuple;
 
 @SpringBootTest
 @TestPropertySource("classpath:test-application.properties")
@@ -59,6 +61,52 @@ class PostServiceTest {
         assertThatThrownBy(() -> postService.getById(id))
                 .isInstanceOf(ResourceNotFoundException.class)
                 .hasMessage("Post에서 ID 123456789를 찾을 수 없습니다.");
+    }
+
+
+    @Test
+    @DisplayName("해당 카테고리에 맞는 Post들을 조회할 수 있다")
+    void 해당_카테고리에_맞는_Post들을_조회할_수_있다() {
+        //given
+        Category category = Category.builder()
+                .name("category1")
+                .build();
+
+        Category category1 = categoryRepository.save(category);
+
+        Post post1 = Post.builder()
+                .title("title1")
+                .content("content1")
+                .category(category1)
+                .build();
+        Post post2 = Post.builder()
+                .title("title2")
+                .content("content2")
+                .category(category1)
+                .build();
+
+//        Post post1 = Post.fromCreate(category1, PostCreate.builder()
+//                .title("title1")
+//                .content("content1")
+//                .categoryId(category1.getId())
+//                .build());
+//        Post post2 = Post.fromCreate(category1, PostCreate.builder()
+//                .title("title2")
+//                .content("content2")
+//                .categoryId(category1.getId())
+//                .build());
+        postRepository.save(post1);
+        postRepository.save(post2);
+
+        //when
+        List<Post> posts = postService.getByCategoryId(category1.getId());
+        //then
+        assertThat(posts).hasSize(2)
+                .extracting(post -> post.getTitle().title(), post -> post.getContent().content())
+                .containsExactlyInAnyOrder(
+                        tuple("title1", "content1"),
+                        tuple("title2", "content2")
+                );
     }
 
     @Test
