@@ -1,6 +1,7 @@
 package study.wild.category.domain;
 
 import lombok.Builder;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.ToString;
 import study.wild.post.domain.Post;
@@ -11,6 +12,7 @@ import java.util.List;
 
 @Getter
 @ToString
+@EqualsAndHashCode
 public class Category {
     private Long id;
     private CategoryName name;

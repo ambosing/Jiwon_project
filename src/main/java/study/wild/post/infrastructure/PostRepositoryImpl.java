@@ -1,14 +1,15 @@
 package study.wild.post.infrastructure;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 import study.wild.common.domain.ResourceNotFoundException;
+import study.wild.post.controller.response.PostListResponse;
 import study.wild.post.domain.Post;
 import study.wild.post.service.port.PostRepository;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Repository
 @Transactional
@@ -32,16 +33,12 @@ public class PostRepositoryImpl implements PostRepository {
     }
 
     @Override
-    public Post update(Long id, Post post) {
-        return null;
+    public Long countByCategoryId(Long categoryId) {
+        return postJpaRepository.countByCategoryId(categoryId);
     }
 
     @Override
-    public List<Post> getByCategoryId(Long categoryId) {
-        return postJpaRepository.findByCategoryId(categoryId)
-                .stream()
-                .map(PostEntity::toDomain)
-                .collect(Collectors.toList());
+    public List<PostListResponse> getByCategoryId(Long categoryId, Pageable pageable) {
+        return postJpaRepository.findByCategoryId(categoryId, pageable);
     }
-
 }

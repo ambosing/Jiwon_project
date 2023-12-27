@@ -65,3 +65,7 @@ sourceSets {
 tasks.named('test') {
     useJUnitPlatform()
 }
+
+clean.doLast {
+    file(generated).deleteDir()
+}

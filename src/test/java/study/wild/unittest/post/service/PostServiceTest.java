@@ -3,19 +3,22 @@ package study.wild.unittest.post.service;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import study.wild.category.domain.Category;
 import study.wild.category.service.port.CategoryRepository;
 import study.wild.common.domain.ResourceNotFoundException;
 import study.wild.post.controller.port.PostService;
+import study.wild.post.controller.response.PostListResponse;
 import study.wild.post.domain.Post;
 import study.wild.post.domain.PostCreate;
+import study.wild.post.domain.PostUpdate;
 import study.wild.post.service.PostServiceImpl;
 import study.wild.post.service.port.PostRepository;
 import study.wild.unittest.mock.category.FakeCategoryRepository;
 import study.wild.unittest.mock.post.FakePostRepository;
 
 import java.time.LocalDateTime;
-import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
@@ -86,10 +89,46 @@ class PostServiceTest {
         postRepository.save(post1);
         postRepository.save(post2);
         //when
-        List<Post> posts = postService.getByCategoryId(category1.getId());
+        Page<PostListResponse> posts = postService.getByCategoryId(category1.getId(), null, PageRequest.of(0, 10));
         //then
         assertThat(posts).hasSize(2)
-                .extracting(post -> post.getTitle().title(), post -> post.getContent().content())
+                .extracting(PostListResponse::getTitle, PostListResponse::getContent)
+                .containsExactlyInAnyOrder(
+                        tuple("title1", "content1"),
+                        tuple("title2", "content2")
+                );
+    }
+
+    @Test
+    @DisplayName("카테고리가 null인 경우 모든 게시물들이 조회된다")
+    void 카테고리가_null인_경우_모든_게시물들이_조회된다() {
+        //given
+        Category category1 = Category.builder()
+                .name("category1")
+                .build();
+        Category savedCategory1 = categoryRepository.save(category1);
+        Category category2 = Category.builder()
+                .name("category2")
+                .build();
+        Category savedCategory2 = categoryRepository.save(category2);
+
+        Post post1 = Post.builder()
+                .title("title1")
+                .content("content1")
+                .category(savedCategory1)
+                .build();
+        Post post2 = Post.builder()
+                .title("title2")
+                .content("content2")
+                .category(savedCategory2)
+                .build();
+        postRepository.save(post1);
+        postRepository.save(post2);
+        //when
+        Page<PostListResponse> posts = postService.getByCategoryId(null, null, PageRequest.of(0, 10));
+        //then
+        assertThat(posts).hasSize(2)
+                .extracting(PostListResponse::getTitle, PostListResponse::getContent)
                 .containsExactlyInAnyOrder(
                         tuple("title1", "content1"),
                         tuple("title2", "content2")
@@ -176,5 +215,33 @@ class PostServiceTest {
         Long deletedId = postService.delete(savedPost.getId());
         //then
         assertThat(deletedId).isEqualTo(savedPost.getId());
+    }
+
+    @Test
+    @DisplayName("Post를 수정할 수 있다")
+    void Post를_수정할_수_있다() {
+        //given
+        Category category1 = Category.builder()
+                .name("category1")
+                .build();
+        Category category = categoryRepository.save(category1);
+        Post savedPost = postRepository.save(
+                Post.builder()
+                        .view(1L)
+                        .title("title1")
+                        .content("content1")
+                        .category(category)
+                        .build()
+        );
+        PostUpdate postUpdate = PostUpdate.builder()
+                .title("UpdatedTitle")
+                .content("UpdatedContent")
+                .build();
+        //when
+        Post updatedPost = postService.update(savedPost.getId(), postUpdate);
+        //then
+        assertThat(updatedPost.getTitle().title()).isEqualTo("UpdatedTitle");
+        assertThat(updatedPost.getContent().content()).isEqualTo("UpdatedContent");
+        assertThat(updatedPost.getCategory()).isEqualTo(category);
     }
 }

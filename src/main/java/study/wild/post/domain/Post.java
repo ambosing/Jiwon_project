@@ -1,8 +1,8 @@
 package study.wild.post.domain;
 
 import lombok.Builder;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
-import lombok.Setter;
 import study.wild.category.domain.Category;
 import study.wild.comment.domain.Comment;
 
@@ -10,7 +10,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 @Getter
-@Setter
+@EqualsAndHashCode
 public class Post {
     private final Long id;
     private final PostTitle title;
@@ -44,6 +44,18 @@ public class Post {
                 .build();
     }
 
+    public Post update(Long id, PostUpdate postUpdate) {
+        return Post.builder()
+                .id(id)
+                .title(postUpdate.title())
+                .content(postUpdate.content())
+                .view(view)
+                .deletedDate(deletedDate)
+                .category(category)
+                .comments(comments)
+                .build();
+    }
+
     public Post delete(LocalDateTime deletedDate) {
         return Post.builder()
                 .id(id)
@@ -52,6 +64,7 @@ public class Post {
                 .view(view)
                 .deletedDate(deletedDate)
                 .category(category)
+                .comments(comments)
                 .build();
     }
 }

@@ -1,6 +1,8 @@
 package study.wild.unittest.mock.post;
 
+import org.springframework.data.domain.Pageable;
 import study.wild.common.domain.ResourceNotFoundException;
+import study.wild.post.controller.response.PostListResponse;
 import study.wild.post.domain.Post;
 import study.wild.post.service.port.PostRepository;
 
@@ -43,14 +45,33 @@ public class FakePostRepository implements PostRepository {
     }
 
     @Override
-    public Post update(Long id, Post post) {
-        return null;
+    public Long countByCategoryId(Long categoryId) {
+        if (categoryId == null) {
+            return (long) data.size();
+        }
+
+        return data.stream()
+                .filter(item -> Objects.equals(item.getCategory().getId(), categoryId))
+                .count();
     }
 
     @Override
-    public List<Post> getByCategoryId(Long categoryId) {
+    public List<PostListResponse> getByCategoryId(Long categoryId, Pageable pageable) {
+
+        System.out.println("-------------------------------------------------------------------");
+        System.out.println("pageNumber : " + pageable.getOffset() + " / offsetSize : " + pageable.getPageSize());
+        if (categoryId == null) {
+            return data.stream()
+                    .map(item -> new PostListResponse(item.getId(), item.getTitle().title(), item.getContent().content(), item.getView()))
+                    .skip(pageable.getOffset() * pageable.getPageSize())
+                    .limit(pageable.getPageSize())
+                    .collect(Collectors.toList());
+        }
         return data.stream()
                 .filter(item -> Objects.equals(item.getCategory().getId(), categoryId))
+                .map(item -> new PostListResponse(item.getId(), item.getTitle().title(), item.getContent().content(), item.getView()))
+                .skip((long) pageable.getPageSize() * pageable.getOffset())
+                .limit(pageable.getPageSize())
                 .collect(Collectors.toList());
     }
 }

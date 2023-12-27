@@ -20,7 +20,7 @@ public class PostResponse {
     private CategoryResponse category;
 
     @Builder
-    public PostResponse(Long id, String title, String content, Long view, List<Comment> comments, CategoryResponse category) {
+    private PostResponse(Long id, String title, String content, Long view, List<Comment> comments, CategoryResponse category) {
         this.id = id;
         this.title = title;
         this.content = content;
@@ -31,6 +31,7 @@ public class PostResponse {
 
     public static PostResponse from(Post post) {
         return PostResponse.builder()
+                .id(post.getId())
                 .content(post.getContent().content())
                 .view(post.getView())
                 .title(post.getTitle().title())
