@@ -29,8 +29,23 @@ public class PostServiceImpl implements PostService {
     private final CategoryRepository categoryRepository;
     private final DatetimeHolder datetimeHolder;
 
+    @Override
     public Post getById(Long id) {
         return postRepository.getById(id);
+    }
+
+    @Override
+    public Page<PostListResponse> getByCategoryId(Long categoryId, Long totalCount, Pageable pageable) {
+        List<PostListResponse> posts = postRepository.getByCategoryId(categoryId, pageable);
+        Long count = countByCategoryId(categoryId, totalCount);
+        return new PageImpl<>(posts, pageable, count);
+    }
+
+    private Long countByCategoryId(Long categoryId, Long totalCount) {
+        if (totalCount == null) {
+            return postRepository.countByCategoryId(categoryId);
+        }
+        return totalCount;
     }
 
     @Transactional
@@ -53,17 +68,5 @@ public class PostServiceImpl implements PostService {
         return postRepository.save(deletedPost).getId();
     }
 
-    @Override
-    public Page<PostListResponse> getByCategoryId(Long categoryId, Long totalCount, Pageable pageable) {
-        List<PostListResponse> posts = postRepository.getByCategoryId(categoryId, pageable);
-        Long count = countByCategoryId(categoryId, totalCount);
-        return new PageImpl<>(posts, pageable, count);
-    }
 
-    private Long countByCategoryId(Long categoryId, Long totalCount) {
-        if (totalCount == null) {
-            return postRepository.countByCategoryId(categoryId);
-        }
-        return totalCount;
-    }
 }

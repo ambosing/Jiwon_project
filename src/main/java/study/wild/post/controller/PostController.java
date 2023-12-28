@@ -12,24 +12,27 @@ import study.wild.post.controller.port.PostService;
 import study.wild.post.controller.response.PostListResponse;
 import study.wild.post.controller.response.PostResponse;
 import study.wild.post.domain.PostCreate;
+import study.wild.post.domain.PostUpdate;
 
 @Builder
 @RestController
 @RequiredArgsConstructor
+@RequestMapping("/posts")
 public class PostController {
 
     private final PostService postService;
 
-    @GetMapping("/posts/{id}")
+    @GetMapping("/{id}")
     public ResponseEntity<PostResponse> getById(@PathVariable("id") Long id) {
         return ResponseEntity.ok()
                 .body(PostResponse.from(postService.getById(id)));
     }
 
-    @GetMapping("/category/{categoryId}/posts")
-    public ResponseEntity<Page<PostListResponse>> getByCategoryId(@PathVariable("categoryId") Long categoryId,
-                                                                  @RequestParam("count") Long totalCount,
-                                                                  Pageable pageable) {
+    @GetMapping
+    public ResponseEntity<Page<PostListResponse>> getByCategoryId(
+            @RequestParam(value = "categoryId", required = false) Long categoryId,
+            @RequestParam(value = "count", required = false) Long totalCount,
+            Pageable pageable) {
         return ResponseEntity.ok()
                 .body(postService.getByCategoryId(categoryId, totalCount, pageable));
     }
@@ -40,5 +43,11 @@ public class PostController {
                 .body(PostResponse.from(postService.create(postCreate)));
     }
 
-
+    @PatchMapping("/{id}")
+    public ResponseEntity<PostResponse> update(
+            @PathVariable("id") Long id,
+            @Valid @RequestBody PostUpdate postUpdate) {
+        return ResponseEntity.ok()
+                .body(PostResponse.from(postService.update(id, postUpdate)));
+    }
 }
