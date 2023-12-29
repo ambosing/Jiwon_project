@@ -8,3 +8,11 @@
 1703158822670|0|statement|connection 55|url jdbc:h2:mem:testdb|     drop table if exists post cascade |     drop table if exists post cascade 
 1703158822670|0|statement|connection 55|url jdbc:h2:mem:testdb|     drop sequence if exists comment_seq|     drop sequence if exists comment_seq
 1703158822670|0|statement|connection 55|url jdbc:h2:mem:testdb|     drop sequence if exists post_seq|     drop sequence if exists post_seq
+1703817095687|0|statement|connection 121|url jdbc:h2:mem:testdb|     drop table if exists category cascade |     drop table if exists category cascade 
+1703817095688|0|statement|connection 121|url jdbc:h2:mem:testdb|     drop table if exists comment cascade |     drop table if exists comment cascade 
+1703817095688|0|statement|connection 121|url jdbc:h2:mem:testdb|     drop table if exists post cascade |     drop table if exists post cascade 
+1703817095688|0|statement|connection 121|url jdbc:h2:mem:testdb|     drop sequence if exists comment_seq|     drop sequence if exists comment_seq
+1703817214356|0|statement|connection 121|url jdbc:h2:mem:testdb|     drop table if exists category cascade |     drop table if exists category cascade 
+1703817214356|0|statement|connection 121|url jdbc:h2:mem:testdb|     drop table if exists comment cascade |     drop table if exists comment cascade 
+1703817214356|0|statement|connection 121|url jdbc:h2:mem:testdb|     drop table if exists post cascade |     drop table if exists post cascade 
+1703817214356|0|statement|connection 121|url jdbc:h2:mem:testdb|     drop sequence if exists comment_seq|     drop sequence if exists comment_seq

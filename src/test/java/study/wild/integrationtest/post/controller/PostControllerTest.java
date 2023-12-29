@@ -52,12 +52,15 @@ class PostControllerTest {
         //then
         mockMvc.perform(get("/posts"))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.content[0].id").value(2))
-                .andExpect(jsonPath("$.content[1].id").value(1))
-                .andExpect(jsonPath("$.content[0].title").value("title2"))
-                .andExpect(jsonPath("$.content[1].title").value("title1"))
-                .andExpect(jsonPath("$.content[0].content").value("content2"))
-                .andExpect(jsonPath("$.content[1].content").value("content1"));
+                .andExpect(jsonPath("$.content[0].id").value(3))
+                .andExpect(jsonPath("$.content[1].id").value(2))
+                .andExpect(jsonPath("$.content[2].id").value(1))
+                .andExpect(jsonPath("$.content[0].title").value("title3"))
+                .andExpect(jsonPath("$.content[1].title").value("title2"))
+                .andExpect(jsonPath("$.content[2].title").value("title1"))
+                .andExpect(jsonPath("$.content[0].content").value("content3"))
+                .andExpect(jsonPath("$.content[1].content").value("content2"))
+                .andExpect(jsonPath("$.content[2].content").value("content1"));
     }
 
     @Test
