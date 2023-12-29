@@ -5,6 +5,7 @@ import org.junit.jupiter.api.Test;
 import study.wild.category.domain.Category;
 import study.wild.post.domain.Post;
 import study.wild.post.domain.PostCreate;
+import study.wild.post.domain.PostUpdate;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -31,5 +32,27 @@ class PostTest {
         assertThat(post.getContent().content()).isEqualTo("content");
         assertThat(post.getCategory().getName().name()).isEqualTo("category");
         assertThat(post.getView()).isEqualTo(0L);
+    }
+
+    @Test
+    @DisplayName("PostUpdate로 Post로 변경할 수 있다")
+    void PostUpdate로_Post로_변경할_수_있다() {
+        //given
+        Long updateId = 1L;
+        PostUpdate postUpdate = PostUpdate.builder()
+                .title("updateTitle")
+                .content("updateContent")
+                .categoryId(1L)
+                .build();
+        Post post = Post.builder()
+                .title("title")
+                .content("content")
+                .build();
+        //when
+        Post updatedPost = post.update(updateId, postUpdate);
+        //then
+        assertThat(updatedPost.getId()).isEqualTo(1L);
+        assertThat(updatedPost.getTitle().title()).isEqualTo("updateTitle");
+        assertThat(updatedPost.getContent().content()).isEqualTo("updateContent");
     }
 }

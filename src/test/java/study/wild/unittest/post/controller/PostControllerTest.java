@@ -12,6 +12,7 @@ import study.wild.post.controller.response.PostListResponse;
 import study.wild.post.controller.response.PostResponse;
 import study.wild.post.domain.Post;
 import study.wild.post.domain.PostCreate;
+import study.wild.post.domain.PostUpdate;
 import study.wild.unittest.mock.post.TestPostContainer;
 
 import java.time.LocalDateTime;
@@ -19,6 +20,7 @@ import java.time.LocalDateTime;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.assertj.core.groups.Tuple.tuple;
+import static org.junit.jupiter.api.Assertions.assertAll;
 
 class PostControllerTest {
 
@@ -87,6 +89,49 @@ class PostControllerTest {
                         tuple("title1", "content1"),
                         tuple("title2", "content2")
                 );
+    }
+
+    @Test
+    @DisplayName("사용자는 게시물을 페이징해서 볼 수 있다")
+    void 사용자는_게시물을_페이징해서_볼_수_있다() {
+        //given
+        TestPostContainer container = TestPostContainer.builder()
+                .datetimeHolder(LocalDateTime::now)
+                .build();
+
+        Category category = Category.builder()
+                .name("category")
+                .build();
+        container.categoryRepository.save(category);
+        container.postRepository.save(
+                Post.builder()
+                        .title("title1")
+                        .content("content1")
+                        .category(category)
+                        .view(0L)
+                        .build());
+        container.postRepository.save(
+                Post.builder()
+                        .title("title2")
+                        .content("content2")
+                        .category(category)
+                        .view(0L)
+                        .build());
+        //when
+        ResponseEntity<Page<PostListResponse>> results1 = container.postController.getByCategoryId(category.getId(), null, PageRequest.of(0, 1));
+        ResponseEntity<Page<PostListResponse>> results2 = container.postController.getByCategoryId(category.getId(), null, PageRequest.of(1, 1));
+
+        //then
+        assertAll(
+                () -> assertThat(results1.getBody().getContent().get(0).getId()).isNotNull(),
+                () -> assertThat(results1.getBody().getContent().get(0).getTitle()).isEqualTo("title2"),
+                () -> assertThat(results1.getBody().getContent().get(0).getContent()).isEqualTo("content2"),
+                () -> assertThat(results1.getBody().getContent().get(0).getView()).isEqualTo(0),
+                () -> assertThat(results2.getBody().getContent().get(0).getId()).isNotNull(),
+                () -> assertThat(results2.getBody().getContent().get(0).getTitle()).isEqualTo("title1"),
+                () -> assertThat(results2.getBody().getContent().get(0).getContent()).isEqualTo("content1"),
+                () -> assertThat(results2.getBody().getContent().get(0).getView()).isEqualTo(0)
+        );
     }
 
     @Test
@@ -172,5 +217,58 @@ class PostControllerTest {
         assertThatThrownBy(() -> container.postController.create(postCreate))
                 .isInstanceOf(IllegalArgumentException.class)
                 .hasMessage("내용을 입력해주세요.");
+    }
+
+    @Test
+    @DisplayName("사용자는 게시물을 수정할 수 있다")
+    void 사용자는_게시물을_수정할_수_있다() {
+        //given
+        TestPostContainer container = TestPostContainer.builder()
+                .datetimeHolder(LocalDateTime::now)
+                .build();
+        Category category = Category.builder()
+                .name("category")
+                .build();
+        container.categoryRepository.save(category);
+        Post post = Post.builder()
+                .title("title")
+                .content("content")
+                .category(category)
+                .build();
+        Post savedPost = container.postRepository.save(post);
+        PostUpdate postUpdate = PostUpdate.builder()
+                .title("updateTitle")
+                .content("updateContent")
+                .build();
+        //when
+        ResponseEntity<PostResponse> result = container.postController.update(savedPost.getId(), postUpdate);
+        //then
+        assertThat(result.getBody().getId()).isEqualTo(savedPost.getId());
+        assertThat(result.getBody().getTitle()).isEqualTo(postUpdate.getTitle());
+        assertThat(result.getBody().getContent()).isEqualTo(postUpdate.getContent());
+    }
+
+    @Test
+    @DisplayName("사용자는 게시물을 삭제할 수 있다")
+    void 사용자는_게시물을_삭제할_수_있다() {
+        //given
+        TestPostContainer container = TestPostContainer.builder()
+                .datetimeHolder(LocalDateTime::now)
+                .build();
+        Category category = Category.builder()
+                .name("category")
+                .build();
+        container.categoryRepository.save(category);
+        Post post = Post.builder()
+                .title("title")
+                .content("content")
+                .category(category)
+                .build();
+        Post savedPost = container.postRepository.save(post);
+        //when
+        ResponseEntity<Long> result = container.postController.delete(savedPost.getId());
+        //then
+        assertThat(result.getStatusCode()).isEqualTo(HttpStatus.valueOf(200));
+        assertThat(result.getBody()).isEqualTo(savedPost.getId());
     }
 }

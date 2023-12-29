@@ -47,8 +47,8 @@ public class Post {
     public Post update(Long id, PostUpdate postUpdate) {
         return Post.builder()
                 .id(id)
-                .title(postUpdate.title())
-                .content(postUpdate.content())
+                .title(postUpdate.getTitle())
+                .content(postUpdate.getContent())
                 .view(view)
                 .deletedDate(deletedDate)
                 .category(category)

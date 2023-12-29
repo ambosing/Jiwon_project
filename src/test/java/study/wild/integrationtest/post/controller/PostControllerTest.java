@@ -17,8 +17,7 @@ import study.wild.post.domain.PostCreate;
 import study.wild.post.domain.PostUpdate;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @SpringBootTest
 @AutoConfigureMockMvc
@@ -140,5 +139,16 @@ class PostControllerTest {
                 .andExpect(jsonPath("$.id").isNumber())
                 .andExpect(jsonPath("$.title").value("updateTitle"))
                 .andExpect(jsonPath("$.content").value("updateContent"));
+    }
+
+    @Test
+    @DisplayName("사용자는 게시물을 삭제할 수 있다")
+    void 사용자는_게시물을_삭제할_수_있다() throws Exception {
+        //given
+        //when
+        //then
+        mockMvc.perform(delete("/posts/1"))
+                .andExpect(status().isOk())
+                .andExpect(content().string("1"));
     }
 }

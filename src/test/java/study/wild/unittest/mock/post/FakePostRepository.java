@@ -7,6 +7,7 @@ import study.wild.post.domain.Post;
 import study.wild.post.service.port.PostRepository;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
@@ -58,10 +59,9 @@ public class FakePostRepository implements PostRepository {
     @Override
     public List<PostListResponse> getByCategoryId(Long categoryId, Pageable pageable) {
 
-        System.out.println("-------------------------------------------------------------------");
-        System.out.println("pageNumber : " + pageable.getOffset() + " / offsetSize : " + pageable.getPageSize());
         if (categoryId == null) {
             return data.stream()
+                    .sorted(Comparator.comparing(Post::getId).reversed())
                     .map(item -> new PostListResponse(item.getId(), item.getTitle().title(), item.getContent().content(), item.getView()))
                     .skip(pageable.getOffset() * pageable.getPageSize())
                     .limit(pageable.getPageSize())
@@ -69,6 +69,7 @@ public class FakePostRepository implements PostRepository {
         }
         return data.stream()
                 .filter(item -> Objects.equals(item.getCategory().getId(), categoryId))
+                .sorted(Comparator.comparing(Post::getId).reversed())
                 .map(item -> new PostListResponse(item.getId(), item.getTitle().title(), item.getContent().content(), item.getView()))
                 .skip((long) pageable.getPageSize() * pageable.getOffset())
                 .limit(pageable.getPageSize())

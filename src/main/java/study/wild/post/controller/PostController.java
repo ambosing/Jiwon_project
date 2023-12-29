@@ -50,4 +50,10 @@ public class PostController {
         return ResponseEntity.ok()
                 .body(PostResponse.from(postService.update(id, postUpdate)));
     }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Long> delete(@PathVariable("id") Long id) {
+        return ResponseEntity.ok()
+                .body(postService.delete(id));
+    }
 }
