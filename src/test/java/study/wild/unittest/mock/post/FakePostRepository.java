@@ -34,7 +34,6 @@ public class FakePostRepository implements PostRepository {
                     .content(post.getContent().content())
                     .deletedDate(post.getDeletedDate())
                     .category(post.getCategory())
-                    .comments(post.getComments())
                     .build();
             data.add(newPost);
             return newPost;

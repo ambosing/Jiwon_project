@@ -17,11 +17,11 @@ import java.time.LocalDateTime;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class CommentEntity extends BaseTimeEntity {
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "comment_id")
     private Long id;
 
-    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "post_id")
     private PostEntity post;
 
@@ -42,7 +42,7 @@ public class CommentEntity extends BaseTimeEntity {
         return CommentEntity.builder()
                 .id(comment.getId())
                 .post(PostEntity.from(comment.getPost()))
-                .content(comment.getContent())
+                .content(comment.getContent().content())
                 .deletedDate(comment.getDeletedDate())
                 .build();
     }
@@ -53,6 +53,8 @@ public class CommentEntity extends BaseTimeEntity {
                 .content(content)
                 .post(post.toDomain())
                 .deletedDate(deletedDate)
+                .createdDate(getCreatedDate())
+                .lastModifiedDate(getLastModifiedDate())
                 .build();
     }
 }

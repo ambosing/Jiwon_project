@@ -3,9 +3,11 @@ package study.wild.unittest.post.domain;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import study.wild.category.domain.Category;
+import study.wild.category.infrastructure.CategoryEntity;
 import study.wild.post.domain.Post;
 import study.wild.post.domain.PostCreate;
 import study.wild.post.domain.PostUpdate;
+import study.wild.post.infrastructure.PostEntity;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -54,5 +56,27 @@ class PostTest {
         assertThat(updatedPost.getId()).isEqualTo(1L);
         assertThat(updatedPost.getTitle().title()).isEqualTo("updateTitle");
         assertThat(updatedPost.getContent().content()).isEqualTo("updateContent");
+    }
+
+    @Test
+    @DisplayName("PostEntity는 Post로 변경할 수 있다")
+    void PostEntity는_Post로_변경할_수_있다() {
+        //given
+        CategoryEntity categoryEntity = CategoryEntity.builder()
+                .id(1L)
+                .name("category")
+                .build();
+        PostEntity postEntity = PostEntity.builder()
+                .id(1L)
+                .title("title")
+                .content("content")
+                .category(categoryEntity)
+                .build();
+        //when
+        Post post = postEntity.toDomain();
+        //then
+        assertThat(post.getId()).isEqualTo(1L);
+        assertThat(post.getTitle().title()).isEqualTo("title");
+        assertThat(post.getContent().content()).isEqualTo("content");
     }
 }

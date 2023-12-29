@@ -36,7 +36,6 @@ public class PostResponse {
                 .view(post.getView())
                 .title(post.getTitle().title())
                 .category(CategoryResponse.from(post.getCategory()))
-                .comments(post.getComments())
                 .build();
     }
 }

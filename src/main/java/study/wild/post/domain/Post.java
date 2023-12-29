@@ -4,10 +4,8 @@ import lombok.Builder;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import study.wild.category.domain.Category;
-import study.wild.comment.domain.Comment;
 
 import java.time.LocalDateTime;
-import java.util.List;
 
 @Getter
 @EqualsAndHashCode
@@ -16,12 +14,11 @@ public class Post {
     private final PostTitle title;
     private final PostContent content;
     private final Long view;
-    private final List<Comment> comments;
     private final Category category;
     private final LocalDateTime deletedDate;
 
     @Builder
-    public Post(Long id, String title, String content, Long view, List<Comment> comments, Category category, LocalDateTime deletedDate) {
+    public Post(Long id, String title, String content, Long view, Category category, LocalDateTime deletedDate) {
         this.id = id;
         this.title = PostTitle.builder()
                 .title(title)
@@ -30,7 +27,6 @@ public class Post {
                 .content(content)
                 .build();
         this.view = view;
-        this.comments = comments;
         this.category = category;
         this.deletedDate = deletedDate;
     }
@@ -52,7 +48,6 @@ public class Post {
                 .view(view)
                 .deletedDate(deletedDate)
                 .category(category)
-                .comments(comments)
                 .build();
     }
 
@@ -64,7 +59,6 @@ public class Post {
                 .view(view)
                 .deletedDate(deletedDate)
                 .category(category)
-                .comments(comments)
                 .build();
     }
 }
