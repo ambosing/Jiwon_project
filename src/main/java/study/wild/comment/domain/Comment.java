@@ -33,4 +33,12 @@ public class Comment {
                 .post(post)
                 .build();
     }
+
+    public Comment update(Post post, CommentUpdate commentUpdate) {
+        return Comment.builder()
+                .id(id)
+                .content(commentUpdate.content())
+                .post(post)
+                .build();
+    }
 }

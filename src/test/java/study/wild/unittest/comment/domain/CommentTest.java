@@ -5,6 +5,7 @@ import org.junit.jupiter.api.Test;
 import study.wild.comment.controller.response.CommentResponse;
 import study.wild.comment.domain.Comment;
 import study.wild.comment.domain.CommentCreate;
+import study.wild.comment.domain.CommentUpdate;
 import study.wild.post.domain.Post;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -45,5 +46,26 @@ class CommentTest {
         //then
         assertThat(commentResponse.getId()).isEqualTo(1L);
         assertThat(commentResponse.getContent()).isEqualTo("content");
+    }
+
+    @Test
+    @DisplayName("CommentUpdate로 Comment를 생성할 수 있다")
+    void CommentUpdate로_Comment를_생성할_수_있다() {
+        //given
+        Post post = Post.builder()
+                .title("title")
+                .content("content")
+                .build();
+        Comment comment = Comment.builder()
+                .post(post)
+                .content("content")
+                .build();
+        CommentUpdate updateTest = CommentUpdate.builder()
+                .content("updateTest")
+                .build();
+        //when
+        Comment updatedComment = comment.update(post, updateTest);
+        //then
+        assertThat(updatedComment.getContent().content()).isEqualTo("updateTest");
     }
 }

@@ -11,6 +11,7 @@ import org.springframework.test.context.jdbc.SqlGroup;
 import study.wild.comment.controller.port.CommentService;
 import study.wild.comment.domain.Comment;
 import study.wild.comment.domain.CommentCreate;
+import study.wild.comment.domain.CommentUpdate;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -41,5 +42,21 @@ class CommentServiceTest {
         assertThat(comment.getId()).isNotNull();
         assertThat(comment.getContent().content()).isEqualTo("CreateTest");
         assertThat(comment.getPost().getId()).isEqualTo(postId);
+    }
+
+    @Test
+    @DisplayName("Comment를 수정할 수 있다")
+    void Comment를_수정할_수_있다() {
+        //given
+        CommentUpdate commentUpdate = CommentUpdate.builder()
+                .content("updateTest")
+                .postId(1L)
+                .build();
+        //when
+        Comment updatedComment = commentService.update(1L, commentUpdate);
+        //then
+        assertThat(updatedComment.getContent().content()).isEqualTo("updateTest");
+        assertThat(updatedComment.getPost().getContent().content()).isEqualTo("content1");
+        assertThat(updatedComment.getPost().getTitle().title()).isEqualTo("title1");
     }
 }

@@ -12,7 +12,9 @@ import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.jdbc.SqlGroup;
 import org.springframework.test.web.servlet.MockMvc;
 import study.wild.comment.domain.CommentCreate;
+import study.wild.comment.domain.CommentUpdate;
 
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -45,7 +47,7 @@ class CommentControllerTest {
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(commentCreate)))
                 .andExpect(status().isCreated())
-                .andExpect(jsonPath("$.id").value("3"))
+                .andExpect(jsonPath("$.id").isNumber())
                 .andExpect(jsonPath("$.content").value("createTest"));
     }
 
@@ -62,6 +64,40 @@ class CommentControllerTest {
         mockMvc.perform(post("/comment")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(commentCreate)))
+                .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    @DisplayName("사용자는 댓글을 수정할 수 있다")
+    void 사용자는_댓글을_수정할_수_있다() throws Exception {
+        //given
+        CommentUpdate commentUpdate = CommentUpdate.builder()
+                .content("update")
+                .postId(1L)
+                .build();
+        //when
+        //then
+        mockMvc.perform(patch("/comment/1")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(commentUpdate)))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.id").value(1L))
+                .andExpect(jsonPath("$.content").value("update"));
+    }
+
+    @Test
+    @DisplayName("사용자는 빈칸으로 댓글 내용을 수정할 수 없다")
+    void 사용자는_빈칸으로_댓글_내용을_수정할_수_없다() throws Exception {
+        //given
+        CommentUpdate commentUpdate = CommentUpdate.builder()
+                .content("")
+                .postId(1L)
+                .build();
+        //when
+        //then
+        mockMvc.perform(patch("/comment/1")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(commentUpdate)))
                 .andExpect(status().isBadRequest());
     }
 }

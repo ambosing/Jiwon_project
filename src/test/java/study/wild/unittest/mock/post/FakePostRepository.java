@@ -20,7 +20,8 @@ public class FakePostRepository implements PostRepository {
     @Override
     public Post getById(Long id) {
         return data.stream().
-                filter(item -> item.getId().equals(id) && item.getDeletedDate() == null).findAny()
+                filter(item -> item.getId().equals(id) && item.getDeletedDate() == null)
+                .findAny()
                 .orElseThrow(() -> new ResourceNotFoundException("Post", id));
     }
 
