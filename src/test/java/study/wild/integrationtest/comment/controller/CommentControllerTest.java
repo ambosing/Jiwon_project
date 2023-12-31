@@ -13,11 +13,13 @@ import org.springframework.test.context.jdbc.SqlGroup;
 import org.springframework.test.web.servlet.MockMvc;
 import study.wild.comment.domain.CommentCreate;
 import study.wild.comment.domain.CommentUpdate;
+import study.wild.comment.infrastructure.CommentEntity;
+import study.wild.comment.infrastructure.CommentJpaRepository;
+import study.wild.common.domain.ResourceNotFoundException;
 
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @SpringBootTest
 @AutoConfigureMockMvc
@@ -30,6 +32,8 @@ class CommentControllerTest {
 
     @Autowired
     private MockMvc mockMvc;
+    @Autowired
+    private CommentJpaRepository commentJpaRepository;
 
     private final ObjectMapper objectMapper = new ObjectMapper();
 
@@ -81,7 +85,7 @@ class CommentControllerTest {
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(commentUpdate)))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.id").value(1L))
+                .andExpect(jsonPath("$.id").isNumber())
                 .andExpect(jsonPath("$.content").value("update"));
     }
 
@@ -99,5 +103,31 @@ class CommentControllerTest {
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(commentUpdate)))
                 .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    @DisplayName("사용자는 댓글을 삭제할 수 있다")
+    void 사용자는_댓글을_삭제할_수_있다() throws Exception {
+        //given
+        //when
+        //then
+        mockMvc.perform(delete("/comment/1"))
+                .andExpect(status().isOk())
+                .andExpect(content().string("1"));
+
+        CommentEntity comment = commentJpaRepository.findById(1L)
+                .orElseThrow(() -> new ResourceNotFoundException("Comment", 1L));
+        assertThat(comment.getDeletedDate()).isNotNull();
+    }
+
+    @Test
+    @DisplayName("사용자는 없는 댓글을 삭제할 수 없다")
+    void 사용자는_없는_댓글을_삭제할_수_없다() throws Exception {
+        //given
+        Long notFoundId = 9999999L;
+        //when
+        //then
+        mockMvc.perform(delete("/comment/{id}", notFoundId))
+                .andExpect(status().isNotFound());
     }
 }

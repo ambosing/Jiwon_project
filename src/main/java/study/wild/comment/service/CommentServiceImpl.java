@@ -23,7 +23,6 @@ public class CommentServiceImpl implements CommentService {
     private final CommentRepository commentRepository;
     private final DatetimeHolder datetimeHolder;
 
-    @Override
     @Transactional
     public Comment create(CommentCreate commentCreate) {
         Post post = postRepository.getById(commentCreate.getPostId());
@@ -31,12 +30,18 @@ public class CommentServiceImpl implements CommentService {
         return commentRepository.save(comment);
     }
 
-    @Override
     @Transactional
     public Comment update(Long id, CommentUpdate commentUpdate) {
         Post post = postRepository.getById(commentUpdate.postId());
-        Comment findComment = commentRepository.getById(id);
-        Comment updatedComment = findComment.update(post, commentUpdate);
+        Comment comment = commentRepository.getById(id);
+        Comment updatedComment = comment.update(post, commentUpdate);
         return commentRepository.save(updatedComment);
+    }
+
+    @Transactional
+    public Long delete(Long id) {
+        Comment comment = commentRepository.getById(id);
+        Comment deletedComment = comment.delete(datetimeHolder.now());
+        return commentRepository.save(deletedComment).getId();
     }
 }

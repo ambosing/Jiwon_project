@@ -9,12 +9,16 @@ import study.wild.comment.domain.CommentCreate;
 import study.wild.comment.domain.CommentUpdate;
 import study.wild.comment.service.CommentServiceImpl;
 import study.wild.comment.service.port.CommentRepository;
+import study.wild.common.domain.ResourceNotFoundException;
 import study.wild.post.domain.Post;
 import study.wild.post.service.port.PostRepository;
 import study.wild.unittest.mock.comment.FakeCommentRepository;
 import study.wild.unittest.mock.post.FakePostRepository;
 
+import java.time.LocalDateTime;
+
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 class CommentServiceTest {
 
@@ -29,6 +33,7 @@ class CommentServiceTest {
         commentService = CommentServiceImpl.builder()
                 .commentRepository(commentRepository)
                 .postRepository(postRepository)
+                .datetimeHolder(() -> LocalDateTime.of(2023, 12, 31, 0, 0))
                 .build();
     }
 
@@ -80,5 +85,39 @@ class CommentServiceTest {
         assertThat(updatedComment.getContent().content()).isEqualTo("updateTest");
         assertThat(updatedComment.getPost().getContent().content()).isEqualTo("content");
         assertThat(updatedComment.getPost().getTitle().title()).isEqualTo("title");
+    }
+
+    @Test
+    @DisplayName("Comment를 삭제할 수 있다")
+    void Comment를_삭제할_수_있다() {
+        //given
+        Post post = postRepository.save(
+                Post.builder()
+                        .title("title")
+                        .content("content")
+                        .build()
+        );
+        Comment comment = Comment.builder()
+                .content("content")
+                .post(post)
+                .build();
+        Comment savedComment = commentRepository.save(comment);
+        //when
+        Long deletedId = commentService.delete(savedComment.getId());
+        //then
+        assertThat(deletedId).isEqualTo(savedComment.getId());
+
+    }
+
+    @Test
+    @DisplayName("없는 Id를 삭제할 수 없다")
+    void 없는_Id를_삭제할_수_없다() {
+        //given
+        Long notFoundId = 9999999L;
+        //when
+        //then
+        assertThatThrownBy(() -> commentService.delete(notFoundId))
+                .isInstanceOf(ResourceNotFoundException.class)
+                .hasMessage("Comment에서 ID %d를 찾을 수 없습니다.", notFoundId);
     }
 }

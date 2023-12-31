@@ -38,7 +38,9 @@ public class ExceptionControllerAdvice {
         return ResponseEntity.status(BAD_REQUEST).body(ex.getMessage());
     }
 
+    @ResponseBody
     @ExceptionHandler(MethodArgumentNotValidException.class)
+    @ResponseStatus(BAD_REQUEST)
     public ResponseEntity<Object> handleValidationExceptions(MethodArgumentNotValidException ex) {
         Map<String, String> errors = new HashMap<>();
         ex.getBindingResult().getAllErrors().forEach((error) -> {

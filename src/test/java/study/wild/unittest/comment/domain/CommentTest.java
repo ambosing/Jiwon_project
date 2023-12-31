@@ -8,6 +8,8 @@ import study.wild.comment.domain.CommentCreate;
 import study.wild.comment.domain.CommentUpdate;
 import study.wild.post.domain.Post;
 
+import java.time.LocalDateTime;
+
 import static org.assertj.core.api.Assertions.assertThat;
 
 class CommentTest {
@@ -67,5 +69,27 @@ class CommentTest {
         Comment updatedComment = comment.update(post, updateTest);
         //then
         assertThat(updatedComment.getContent().content()).isEqualTo("updateTest");
+    }
+
+    @Test
+    @DisplayName("Comment에 DeleteDate를 표시할 수 있다")
+    void Comment에_DeleteDate를_표시할_수_있다() {
+        //given
+        LocalDateTime testDateTime = LocalDateTime.of(2023, 12, 31, 0, 0);
+        Post post = Post.builder()
+                .title("title")
+                .content("content")
+                .build();
+        Comment comment = Comment.builder()
+                .post(post)
+                .content("commentContent")
+                .build();
+        //when
+        Comment deleteCheckedComment = comment.delete(testDateTime);
+        //then
+        assertThat(deleteCheckedComment.getPost().getContent().content()).isEqualTo("content");
+        assertThat(deleteCheckedComment.getPost().getTitle().title()).isEqualTo("title");
+        assertThat(deleteCheckedComment.getDeletedDate()).isEqualTo(testDateTime);
+        assertThat(deleteCheckedComment.getContent().content()).isEqualTo("commentContent");
     }
 }

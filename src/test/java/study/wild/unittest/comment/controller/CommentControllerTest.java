@@ -9,8 +9,11 @@ import study.wild.comment.controller.response.CommentResponse;
 import study.wild.comment.domain.Comment;
 import study.wild.comment.domain.CommentCreate;
 import study.wild.comment.domain.CommentUpdate;
+import study.wild.common.domain.ResourceNotFoundException;
 import study.wild.post.domain.Post;
 import study.wild.unittest.mock.comment.TestCommentContainer;
+
+import java.time.LocalDateTime;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
@@ -132,5 +135,49 @@ class CommentControllerTest {
         assertThatThrownBy(() -> container.commentController.update(savedComment.getId(), commentUpdate))
                 .isInstanceOf(IllegalArgumentException.class)
                 .hasMessage("내용을 입력해주세요.");
+    }
+
+    @Test
+    @DisplayName("사용자는 댓글을 삭제할 수 있다")
+    void 사용자는_댓글을_삭제할_수_있다() {
+        //given
+        TestCommentContainer container = TestCommentContainer.builder()
+                .datetimeHolder(() -> LocalDateTime.of(2023, 12, 31, 0, 0))
+                .build();
+        Category category = Category.builder()
+                .name("category")
+                .build();
+        Category savedCategory = container.categoryRepository.save(category);
+        Post post = Post.builder()
+                .title("title")
+                .content("content")
+                .category(savedCategory)
+                .build();
+        Post savedPost = container.postRepository.save(post);
+        Comment comment = Comment.builder()
+                .content("create")
+                .post(savedPost)
+                .build();
+        Comment savedComment = container.commentRepository.save(comment);
+        //when
+        ResponseEntity<Long> result = container.commentController.delete(savedComment.getId());
+        //then
+        assertThat(result.getStatusCode()).isEqualTo(HttpStatus.OK);
+        assertThat(result.getBody()).isEqualTo(savedComment.getId());
+    }
+
+    @Test
+    @DisplayName("사용자는 없는 댓글을 삭제할 수 없다")
+    void 사용자는_없는_댓글을_삭제할_수_없다() {
+        //given
+        TestCommentContainer container = TestCommentContainer.builder()
+                .datetimeHolder(() -> LocalDateTime.of(2023, 12, 31, 0, 0))
+                .build();
+        Long notFoundId = 9999999L;
+        //when
+        //then
+        assertThatThrownBy(() -> container.commentController.delete(notFoundId))
+                .isInstanceOf(ResourceNotFoundException.class)
+                .hasMessage("Comment에서 ID %d를 찾을 수 없습니다.", notFoundId);
     }
 }

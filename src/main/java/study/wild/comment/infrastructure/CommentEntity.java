@@ -28,6 +28,7 @@ public class CommentEntity extends BaseTimeEntity {
     @Column(nullable = false, length = 128)
     private String content;
 
+    @Column
     private LocalDateTime deletedDate;
 
     @Builder

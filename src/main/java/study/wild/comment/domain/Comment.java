@@ -41,4 +41,13 @@ public class Comment {
                 .post(post)
                 .build();
     }
+
+    public Comment delete(LocalDateTime deletedDate) {
+        return Comment.builder()
+                .id(id)
+                .content(content.content())
+                .post(post)
+                .deletedDate(deletedDate)
+                .build();
+    }
 }

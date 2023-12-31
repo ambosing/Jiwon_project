@@ -12,8 +12,10 @@ import study.wild.comment.controller.port.CommentService;
 import study.wild.comment.domain.Comment;
 import study.wild.comment.domain.CommentCreate;
 import study.wild.comment.domain.CommentUpdate;
+import study.wild.common.domain.ResourceNotFoundException;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 @SpringBootTest
 @TestPropertySource("classpath:test-application.properties")
@@ -58,5 +60,28 @@ class CommentServiceTest {
         assertThat(updatedComment.getContent().content()).isEqualTo("updateTest");
         assertThat(updatedComment.getPost().getContent().content()).isEqualTo("content1");
         assertThat(updatedComment.getPost().getTitle().title()).isEqualTo("title1");
+    }
+
+    @Test
+    @DisplayName("Comment를 삭제할 수 있다")
+    void Comment를_삭제할_수_있다() {
+        //given
+        Long id = 1L;
+        //when
+        Long deletedId = commentService.delete(id);
+        //then
+        assertThat(deletedId).isEqualTo(id);
+    }
+
+    @Test
+    @DisplayName("없는 Id를 삭제할 수 없다")
+    void 없는_Id를_삭제할_수_없다() {
+        //given
+        Long notFoundId = 9999999L;
+        //when
+        //then
+        assertThatThrownBy(() -> commentService.delete(notFoundId))
+                .isInstanceOf(ResourceNotFoundException.class)
+                .hasMessage("Comment에서 ID %d를 찾을 수 없습니다.", notFoundId);
     }
 }
