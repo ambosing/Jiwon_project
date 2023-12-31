@@ -11,9 +11,8 @@ public record PostTitle(String title) {
     }
 
     private void validateEmptyString(String title) {
-        if (title == null || title.isEmpty() || title.isBlank()) {
+        if (title == null || title.isBlank()) {
             throw new IllegalArgumentException("제목을 입력해주세요.");
         }
     }
-
 }

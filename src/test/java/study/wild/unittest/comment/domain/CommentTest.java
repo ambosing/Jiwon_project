@@ -11,6 +11,7 @@ import study.wild.post.domain.Post;
 import java.time.LocalDateTime;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 class CommentTest {
     @Test
@@ -91,5 +92,27 @@ class CommentTest {
         assertThat(deleteCheckedComment.getPost().getTitle().title()).isEqualTo("title");
         assertThat(deleteCheckedComment.getDeletedDate()).isEqualTo(testDateTime);
         assertThat(deleteCheckedComment.getContent().content()).isEqualTo("commentContent");
+    }
+
+    @Test
+    @DisplayName("Comment의 내용을 빈칸으로 만들 수 없다")
+    void Comment의_내용을_빈칸으로_만들_수_없다() {
+        //given
+        //when
+        //then
+        assertThatThrownBy(() -> Comment.builder().content("").build())
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessage("내용을 입력해주세요.");
+    }
+
+    @Test
+    @DisplayName("Comment 내용이 Null일 수 없다")
+    void Comment_내용이_Null일_수_없다() {
+        //given
+        //when
+        //then
+        assertThatThrownBy(() -> Comment.builder().content(null).build())
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessage("내용을 입력해주세요.");
     }
 }

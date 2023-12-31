@@ -91,15 +91,18 @@ class PostControllerTest {
                         .andExpect(status().isOk())
                         .andExpect(jsonPath("$.content[0].id").value(2))
                         .andExpect(jsonPath("$.content[0].title").value("title2"))
-                        .andExpect(jsonPath("$.content[0].content").value("content2")),
+                        .andExpect(jsonPath("$.content[0].content").value("content2"))
+                        .andExpect(jsonPath("$.totalElements").value("2")),
                 () -> mockMvc.perform(get("/posts")
                                 .queryParam("categoryId", "1")
+                                .queryParam("count", "2")
                                 .queryParam("page", "1")
                                 .queryParam("size", "1"))
                         .andExpect(status().isOk())
                         .andExpect(jsonPath("$.content[0].id").value(1))
                         .andExpect(jsonPath("$.content[0].title").value("title1"))
                         .andExpect(jsonPath("$.content[0].content").value("content1"))
+                        .andExpect(jsonPath("$.totalElements").value("2"))
         );
     }
 

@@ -10,7 +10,7 @@ public record CategoryName(String name) {
     }
 
     private void validate(String name) {
-        if (name == null || name.isEmpty() || name.isBlank()) {
+        if (name == null || name.isBlank()) {
             throw new IllegalArgumentException("이름을 입력해주세요.");
         }
     }

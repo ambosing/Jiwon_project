@@ -1,12 +1,14 @@
 package study.wild.comment.domain;
 
 import lombok.Builder;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import study.wild.post.domain.Post;
 
 import java.time.LocalDateTime;
 
 @Getter
+@EqualsAndHashCode
 public class Comment {
     private final Long id;
     private final Post post;

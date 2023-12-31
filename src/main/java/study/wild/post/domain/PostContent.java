@@ -9,7 +9,7 @@ public record PostContent(String content) {
     }
 
     private void validateEmptyString(String content) {
-        if (content == null || content.isEmpty() || content.isBlank()) {
+        if (content == null || content.isBlank()) {
             throw new IllegalArgumentException("내용을 입력해주세요.");
         }
     }
