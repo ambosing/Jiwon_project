@@ -2,6 +2,7 @@ package study.wild.category.infrastructure;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 import study.wild.category.domain.Category;
 import study.wild.category.service.port.CategoryRepository;
 import study.wild.common.domain.ResourceNotFoundException;
@@ -9,6 +10,7 @@ import study.wild.common.domain.ResourceNotFoundException;
 import java.util.List;
 
 @Repository
+@Transactional
 @RequiredArgsConstructor
 public class CategoryRepositoryImpl implements CategoryRepository {
 

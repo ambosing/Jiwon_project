@@ -1,12 +1,12 @@
 package study.wild.unittest.mock.category;
 
 import study.wild.category.domain.Category;
-import study.wild.category.domain.CategoryUpdate;
 import study.wild.category.service.port.CategoryRepository;
 import study.wild.common.domain.ResourceNotFoundException;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 public class FakeCategoryRepository implements CategoryRepository {
 
@@ -24,18 +24,9 @@ public class FakeCategoryRepository implements CategoryRepository {
             data.add(newCategory);
             return newCategory;
         } else {
-            return data.stream()
-                    .filter(item -> item.getId().equals(category.getId()))
-                    .findFirst()
-                    .map(existingCategory -> {
-                        existingCategory.update(category.getId(), CategoryUpdate
-                                .builder()
-                                .name(category.getName().name())
-                                .deleteDateTime(category.getDeletedDate())
-                                .build());
-                        return existingCategory;
-                    })
-                    .orElseThrow(() -> new ResourceNotFoundException("Category", id));
+            data.removeIf(item -> Objects.equals(item.getId(), category.getId()));
+            data.add(category);
+            return category;
         }
     }
 

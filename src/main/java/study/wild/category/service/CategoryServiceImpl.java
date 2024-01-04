@@ -24,23 +24,19 @@ public class CategoryServiceImpl implements CategoryService {
     private final CategoryRepository categoryRepository;
     private final DatetimeHolder datetimeHolder;
 
-    @Override
     public Category getById(Long id) {
         return categoryRepository.getById(id);
     }
 
-    @Override
     public List<Category> findAll() {
         return categoryRepository.findAll();
     }
 
-    @Override
     @Transactional
     public Category create(CategoryCreate categoryCreate) {
         return categoryRepository.save(Category.fromCreate(categoryCreate));
     }
 
-    @Override
     @Transactional
     public Category update(Long id, CategoryUpdate categoryUpdate) {
         Category category = getById(id);
@@ -48,13 +44,11 @@ public class CategoryServiceImpl implements CategoryService {
         return categoryRepository.save(category);
     }
 
-    @Override
     @Transactional
     public Long delete(Long id) {
         // TODO : Post가 있으면 삭제 못하게 에러 발생
         Category category = getById(id);
-        category.delete(datetimeHolder.now());
-        categoryRepository.save(category);
-        return id;
+        Category deletedCategory = category.delete(datetimeHolder.now());
+        return categoryRepository.save(deletedCategory).getId();
     }
 }

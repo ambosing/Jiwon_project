@@ -1,6 +1,7 @@
 package study.wild.category.domain;
 
 import lombok.Builder;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.ToString;
 import study.wild.post.domain.Post;
@@ -11,6 +12,7 @@ import java.util.List;
 
 @Getter
 @ToString
+@EqualsAndHashCode
 public class Category {
     private Long id;
     private CategoryName name;
@@ -31,15 +33,18 @@ public class Category {
     }
 
     public Category update(Long id, CategoryUpdate categoryUpdate) {
-        this.id = id;
-        this.name = CategoryName.builder()
+        return Category.builder()
+                .id(id)
                 .name(categoryUpdate.getName())
+                .deletedDate(categoryUpdate.deleteDateTime)
                 .build();
-        this.deletedDate = categoryUpdate.getDeleteDateTime();
-        return this;
     }
 
-    public void delete(LocalDateTime deleteDate) {
-        this.deletedDate = deleteDate;
+    public Category delete(LocalDateTime deleteDate) {
+        return Category.builder()
+                .id(id)
+                .name(name.name())
+                .deletedDate(deleteDate)
+                .build();
     }
 }
