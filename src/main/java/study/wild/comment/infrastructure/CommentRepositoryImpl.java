@@ -6,6 +6,8 @@ import study.wild.comment.domain.Comment;
 import study.wild.comment.service.port.CommentRepository;
 import study.wild.common.domain.ResourceNotFoundException;
 
+import java.util.List;
+
 @Repository
 @RequiredArgsConstructor
 public class CommentRepositoryImpl implements CommentRepository {
@@ -22,5 +24,13 @@ public class CommentRepositoryImpl implements CommentRepository {
     @Override
     public Comment save(Comment comment) {
         return commentJpaRepository.save(CommentEntity.from(comment)).toDomain();
+    }
+
+    @Override
+    public List<Comment> getByPostId(Long postId) {
+        return commentJpaRepository.findByPostIdAndDeletedDateIsNull(postId)
+                .stream()
+                .map(CommentEntity::toDomain)
+                .toList();
     }
 }

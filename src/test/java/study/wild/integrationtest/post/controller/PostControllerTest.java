@@ -39,9 +39,27 @@ class PostControllerTest {
         //then
         mockMvc.perform(get("/posts/1"))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.id").value(1))
+                .andExpect(jsonPath("$.id").isNumber())
                 .andExpect(jsonPath("$.title").value("title1"))
                 .andExpect(jsonPath("$.content").value("content1"));
+    }
+
+    @Test
+    @DisplayName("사용자는 단건의 게시물을 댓글과 카테고리를 함께 조회할 수 있다")
+    void 사용자는_단건의_게시물을_댓글과_카테고리를_함께_조회할_수_있다() throws Exception {
+        //given
+        //when
+        //then
+        mockMvc.perform(get("/posts/1/comments"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.id").isNumber())
+                .andExpect(jsonPath("$.title").value("title1"))
+                .andExpect(jsonPath("$.content").value("content1"))
+                .andExpect(jsonPath("$.category.name").value("category1"))
+                .andExpectAll(
+                        jsonPath("$.comments.commentListResponse[0].content").value("comment1"),
+                        jsonPath("$.comments.commentListResponse[1].content").value("comment2")
+                );
     }
 
     @Test

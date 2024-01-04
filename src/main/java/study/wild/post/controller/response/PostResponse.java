@@ -4,8 +4,10 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import study.wild.category.controller.response.CategoryResponse;
+import study.wild.comment.controller.response.CommentListResponse;
 import study.wild.comment.domain.Comment;
 import study.wild.post.domain.Post;
+import study.wild.post.infrastructure.PostQuery;
 
 import java.util.List;
 
@@ -16,7 +18,7 @@ public class PostResponse {
     private String title;
     private String content;
     private Long view;
-    private List<Comment> comments;
+    private CommentListResponse comments;
     private CategoryResponse category;
 
     @Builder
@@ -25,7 +27,7 @@ public class PostResponse {
         this.title = title;
         this.content = content;
         this.view = view;
-        this.comments = comments;
+        this.comments = CommentListResponse.from(comments);
         this.category = category;
     }
 
@@ -38,4 +40,16 @@ public class PostResponse {
                 .category(CategoryResponse.from(post.getCategory()))
                 .build();
     }
+
+    public static PostResponse from(PostQuery postQuery) {
+        return PostResponse.builder()
+                .id(postQuery.getId())
+                .title(postQuery.getTitle())
+                .content(postQuery.getContent())
+                .view(postQuery.getView())
+                .category(CategoryResponse.from(postQuery.getCategory()))
+                .comments(postQuery.getComments())
+                .build();
+    }
+
 }

@@ -3,36 +3,49 @@ package study.wild.unittest.post.service;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import study.wild.category.domain.Category;
 import study.wild.category.service.port.CategoryRepository;
+import study.wild.comment.domain.Comment;
+import study.wild.comment.service.port.CommentRepository;
 import study.wild.common.domain.ResourceNotFoundException;
 import study.wild.post.controller.port.PostService;
-import study.wild.post.controller.response.PostListResponse;
 import study.wild.post.domain.Post;
 import study.wild.post.domain.PostCreate;
 import study.wild.post.domain.PostUpdate;
+import study.wild.post.infrastructure.PostListQuery;
+import study.wild.post.infrastructure.PostQuery;
 import study.wild.post.service.PostServiceImpl;
+import study.wild.post.service.ViewService;
 import study.wild.post.service.port.PostRepository;
 import study.wild.unittest.mock.category.FakeCategoryRepository;
+import study.wild.unittest.mock.comment.FakeCommentRepository;
 import study.wild.unittest.mock.post.FakePostRepository;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.assertj.core.groups.Tuple.tuple;
+import static org.mockito.Mockito.when;
 
+@ExtendWith(MockitoExtension.class)
 class PostServiceTest {
     private PostService postService;
     private PostRepository postRepository;
     private CategoryRepository categoryRepository;
+    private CommentRepository commentRepository;
 
     @BeforeEach
     void setUp() {
         postRepository = new FakePostRepository();
         categoryRepository = new FakeCategoryRepository();
+        commentRepository = new FakeCommentRepository();
         postService = PostServiceImpl.builder()
                 .datetimeHolder(() -> LocalDateTime.of(2023, 12, 25, 0, 0))
                 .postRepository(postRepository)
@@ -45,16 +58,15 @@ class PostServiceTest {
     void id로_Post_를_조회할_수_있다() {
         //given
         Long id = 1L;
-        Category category1 = Category.builder()
+        Category category = Category.builder()
                 .name("category1")
                 .build();
-        categoryRepository.save(category1);
         postRepository.save(
                 Post.builder()
                         .view(1L)
                         .title("title1")
                         .content("content1")
-                        .category(category1)
+                        .category(category)
                         .build()
         );
         //when
@@ -65,6 +77,55 @@ class PostServiceTest {
         assertThat(findPost.getContent().content()).isEqualTo("content1");
         assertThat(findPost.getCategory().getName().name()).isEqualTo("category1");
         assertThat(findPost.getView()).isEqualTo(1L);
+    }
+
+    @Test // 모킹 써보기 연습
+    @DisplayName("id로 Post와 Post_id에 해당하는 Comment를 함께 조회할 수 있다")
+    void id로_Post와_Post_id에_해당하는_Comment를_함께_조회할_수_있다(@Mock PostRepository postRepository,
+                                                      @Mock CategoryRepository categoryRepository,
+                                                      @Mock CommentRepository commentRepository,
+                                                      @Mock ViewService viewService) {
+        //given
+        PostService postService = PostServiceImpl.builder()
+                .postRepository(postRepository)
+                .categoryRepository(categoryRepository)
+                .commentRepository(commentRepository)
+                .viewService(viewService)
+                .datetimeHolder(() -> LocalDateTime.of(2023, 12, 25, 0, 0))
+                .build();
+        Long id = 1L;
+        Category category = Category.builder()
+                .name("category")
+                .build();
+        Comment comment1 = Comment.builder()
+                .id(1L)
+                .content("comment1")
+                .build();
+        Comment comment2 = Comment.builder()
+                .id(2L)
+                .content("comment2")
+                .build();
+        PostQuery postQuery = PostQuery.builder()
+                .id(id)
+                .title("title1")
+                .content("content1")
+                .categoryId(category.getId())
+                .categoryName(category.getName().name())
+                .view(1L)
+                .build();
+        when(postRepository.getWithCommentById(id)).thenReturn(postQuery);
+        when(commentRepository.getByPostId(id)).thenReturn(List.of(comment1, comment2));
+        //when
+        PostQuery result = postService.getByIdWithComment(id);
+        //then
+        assertThat(result).isNotNull();
+        assertThat(result.getComments().get(0).getContent().content()).isEqualTo("comment1");
+        assertThat(result.getComments().get(0).getId()).isEqualTo(1L);
+        assertThat(result.getComments().get(1).getContent().content()).isEqualTo("comment2");
+        assertThat(result.getComments().get(1).getId()).isEqualTo(2L);
+        assertThat(result.getTitle()).isEqualTo("title1");
+        assertThat(result.getContent()).isEqualTo("content1");
+        assertThat(result.getView()).isEqualTo(1L);
     }
 
     @Test
@@ -89,10 +150,10 @@ class PostServiceTest {
         postRepository.save(post1);
         postRepository.save(post2);
         //when
-        Page<PostListResponse> posts = postService.getByCategoryId(category1.getId(), null, PageRequest.of(0, 10));
+        Page<PostListQuery> posts = postService.getByCategoryId(category1.getId(), null, PageRequest.of(0, 10));
         //then
         assertThat(posts).hasSize(2)
-                .extracting(PostListResponse::getTitle, PostListResponse::getContent)
+                .extracting(PostListQuery::getTitle, PostListQuery::getContent)
                 .containsExactlyInAnyOrder(
                         tuple("title1", "content1"),
                         tuple("title2", "content2")
@@ -125,10 +186,10 @@ class PostServiceTest {
         postRepository.save(post1);
         postRepository.save(post2);
         //when
-        Page<PostListResponse> posts = postService.getByCategoryId(null, null, PageRequest.of(0, 10));
+        Page<PostListQuery> posts = postService.getByCategoryId(null, null, PageRequest.of(0, 10));
         //then
         assertThat(posts).hasSize(2)
-                .extracting(PostListResponse::getTitle, PostListResponse::getContent)
+                .extracting(PostListQuery::getTitle, PostListQuery::getContent)
                 .containsExactlyInAnyOrder(
                         tuple("title1", "content1"),
                         tuple("title2", "content2")

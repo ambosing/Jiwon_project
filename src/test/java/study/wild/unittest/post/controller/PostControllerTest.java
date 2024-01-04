@@ -7,6 +7,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import study.wild.category.domain.Category;
+import study.wild.comment.domain.Comment;
 import study.wild.common.domain.ResourceNotFoundException;
 import study.wild.post.controller.response.PostListResponse;
 import study.wild.post.controller.response.PostResponse;
@@ -52,6 +53,48 @@ class PostControllerTest {
         assertThat(result.getBody().getTitle()).isEqualTo("title");
         assertThat(result.getBody().getContent()).isEqualTo("content");
         assertThat(result.getBody().getView()).isEqualTo(0L);
+    }
+
+    @Test
+    @DisplayName("사용자는 게시물과 함께 댓글을 조회할 수 있다")
+    void 사용자는_게시물과_함께_댓글을_조회할_수_있다() {
+        //given
+        TestPostContainer container = TestPostContainer.builder()
+                .datetimeHolder(LocalDateTime::now)
+                .build();
+        Category category = Category.builder()
+                .name("category")
+                .build();
+        Category savedCategory = container.categoryRepository.save(category);
+        Post post = Post.builder()
+                .title("title")
+                .content("content")
+                .category(savedCategory)
+                .build();
+        Post savedPost = container.postRepository.save(post);
+        Comment comment1 = Comment.builder()
+                .id(1L)
+                .post(savedPost)
+                .content("comment1")
+                .build();
+        Comment comment2 = Comment.builder()
+                .id(2L)
+                .post(savedPost)
+                .content("comment2")
+                .build();
+        container.commentRepository.save(comment1);
+        container.commentRepository.save(comment2);
+        //when
+        ResponseEntity<PostResponse> result = container.postController.getWithCommentById(1L);
+        //then
+        assertThat(result).isNotNull();
+        assertThat(result.getBody().getComments().getCommentListResponse().get(0).getContent()).isEqualTo("comment1");
+        assertThat(result.getBody().getComments().getCommentListResponse().get(1).getContent()).isEqualTo("comment2");
+        assertThat(result.getBody().getComments().getCommentListResponse().get(0).getId()).isEqualTo(1L);
+        assertThat(result.getBody().getComments().getCommentListResponse().get(1).getId()).isEqualTo(2L);
+        assertThat(result.getBody().getTitle()).isEqualTo("title1");
+        assertThat(result.getBody().getContent()).isEqualTo("content1");
+        assertThat(result.getBody().getView()).isEqualTo(1L);
     }
 
     @Test

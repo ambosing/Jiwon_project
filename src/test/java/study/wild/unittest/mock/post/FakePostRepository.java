@@ -2,8 +2,9 @@ package study.wild.unittest.mock.post;
 
 import org.springframework.data.domain.Pageable;
 import study.wild.common.domain.ResourceNotFoundException;
-import study.wild.post.controller.response.PostListResponse;
 import study.wild.post.domain.Post;
+import study.wild.post.infrastructure.PostListQuery;
+import study.wild.post.infrastructure.PostQuery;
 import study.wild.post.service.port.PostRepository;
 
 import java.util.ArrayList;
@@ -23,6 +24,13 @@ public class FakePostRepository implements PostRepository {
                 filter(item -> item.getId().equals(id) && item.getDeletedDate() == null)
                 .findAny()
                 .orElseThrow(() -> new ResourceNotFoundException("Post", id));
+    }
+
+    @Override
+    public List<Post> getByIdIn(List<Long> ids) {
+        return data.stream()
+                .filter(item -> ids.contains(item.getId()))
+                .toList();
     }
 
     @Override
@@ -57,12 +65,12 @@ public class FakePostRepository implements PostRepository {
     }
 
     @Override
-    public List<PostListResponse> getByCategoryId(Long categoryId, Pageable pageable) {
+    public List<PostListQuery> getByCategoryId(Long categoryId, Pageable pageable) {
 
         if (categoryId == null) {
             return data.stream()
                     .sorted(Comparator.comparing(Post::getId).reversed())
-                    .map(item -> new PostListResponse(item.getId(), item.getTitle().title(), item.getContent().content(), item.getView()))
+                    .map(item -> new PostListQuery(item.getId(), item.getTitle().title(), item.getContent().content(), item.getView()))
                     .skip(pageable.getOffset() * pageable.getPageSize())
                     .limit(pageable.getPageSize())
                     .collect(Collectors.toList());
@@ -70,9 +78,27 @@ public class FakePostRepository implements PostRepository {
         return data.stream()
                 .filter(item -> Objects.equals(item.getCategory().getId(), categoryId))
                 .sorted(Comparator.comparing(Post::getId).reversed())
-                .map(item -> new PostListResponse(item.getId(), item.getTitle().title(), item.getContent().content(), item.getView()))
+                .map(item -> new PostListQuery(item.getId(), item.getTitle().title(), item.getContent().content(), item.getView()))
                 .skip((long) pageable.getPageSize() * pageable.getOffset())
                 .limit(pageable.getPageSize())
                 .collect(Collectors.toList());
+    }
+
+    @Override
+    public PostQuery getWithCommentById(Long id) {
+        return PostQuery.builder()
+                .id(id)
+                .title("title1")
+                .content("content1")
+                .categoryId(1L)
+                .categoryName("category")
+                .view(1L)
+                .build();
+    }
+
+    @Override
+    public Integer saveAll(List<Post> updatedPosts) {
+        data.addAll(updatedPosts);
+        return updatedPosts.size();
     }
 }

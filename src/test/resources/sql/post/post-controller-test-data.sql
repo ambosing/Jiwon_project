@@ -8,4 +8,8 @@ insert into `post` (`post_id`, `title`, `content`, `view`, `category_id`)
 values (2, 'title2', 'content2', 0, 1);
 insert into `post` (`post_id`, `title`, `content`, `view`, `category_id`)
 values (3, 'title3', 'content3', 0, 2);
+insert into `comment` (`comment_id`, `content`, `post_id`)
+values (1, 'comment1', 1);
+insert into `comment` (`comment_id`, `content`, `post_id`)
+values (2, 'comment2', 1);
 

@@ -44,4 +44,5 @@ public class CommentServiceImpl implements CommentService {
         Comment deletedComment = comment.delete(datetimeHolder.now());
         return commentRepository.save(deletedComment).getId();
     }
+    
 }

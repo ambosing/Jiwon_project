@@ -13,17 +13,21 @@ import study.wild.category.domain.Category;
 import study.wild.category.service.port.CategoryRepository;
 import study.wild.common.domain.ResourceNotFoundException;
 import study.wild.post.controller.port.PostService;
-import study.wild.post.controller.response.PostListResponse;
 import study.wild.post.domain.Post;
 import study.wild.post.domain.PostCreate;
 import study.wild.post.domain.PostUpdate;
+import study.wild.post.infrastructure.PostListQuery;
+import study.wild.post.infrastructure.PostQuery;
+import study.wild.post.service.ViewService;
 import study.wild.post.service.port.PostRepository;
 
 import java.time.LocalDateTime;
+import java.util.concurrent.TimeUnit;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.assertj.core.groups.Tuple.tuple;
+import static org.awaitility.Awaitility.await;
 
 @SpringBootTest
 @TestPropertySource("classpath:test-application.properties")
@@ -38,6 +42,8 @@ class PostServiceTest {
     private PostRepository postRepository;
     @Autowired
     private CategoryRepository categoryRepository;
+    @Autowired
+    private ViewService viewService;
 
     @Test
     @DisplayName("id로 Post를 조회할 수 있다.")
@@ -71,30 +77,12 @@ class PostServiceTest {
     @DisplayName("해당 카테고리에 맞는 Post들을 조회할 수 있다")
     void 해당_카테고리에_맞는_Post들을_조회할_수_있다() {
         //given
-        Category category = Category.builder()
-                .name("category1")
-                .build();
-
-        Category category1 = categoryRepository.save(category);
-
-        Post post1 = Post.fromCreate(category1, PostCreate.builder()
-                .title("title1")
-                .content("content1")
-                .categoryId(category1.getId())
-                .build());
-        Post post2 = Post.fromCreate(category1, PostCreate.builder()
-                .title("title2")
-                .content("content2")
-                .categoryId(category1.getId())
-                .build());
-        postRepository.save(post1);
-        postRepository.save(post2);
-
+        Long categoryId = 1L;
         //when
-        Page<PostListResponse> posts = postService.getByCategoryId(category1.getId(), null, PageRequest.of(0, 10));
+        Page<PostListQuery> posts = postService.getByCategoryId(categoryId, null, PageRequest.of(0, 10));
         //then
         assertThat(posts).hasSize(2)
-                .extracting(PostListResponse::getTitle, PostListResponse::getContent)
+                .extracting(PostListQuery::getTitle, PostListQuery::getContent)
                 .containsExactlyInAnyOrder(
                         tuple("title1", "content1"),
                         tuple("title2", "content2")
@@ -105,38 +93,39 @@ class PostServiceTest {
     @DisplayName("카테고리가 null인 경우 모든 게시물들이 조회된다")
     void 카테고리가_null인_경우_모든_게시물들이_조회된다() {
         //given
-        Category category1 = Category.builder()
-                .name("category1")
-                .build();
-        Category savedCategory1 = categoryRepository.save(category1);
-        Category category2 = Category.builder()
-                .name("category2")
-                .build();
-        Category savedCategory2 = categoryRepository.save(category2);
-
-        Post post1 = Post.builder()
-                .title("title3")
-                .content("content3")
-                .category(savedCategory1)
-                .build();
-        Post post2 = Post.builder()
-                .title("title4")
-                .content("content4")
-                .category(savedCategory2)
-                .build();
-        postRepository.save(post1);
-        postRepository.save(post2);
         //when
-        Page<PostListResponse> posts = postService.getByCategoryId(null, null, PageRequest.of(0, 10));
+        Page<PostListQuery> posts = postService.getByCategoryId(null, null, PageRequest.of(0, 10));
         //then
-        assertThat(posts).hasSize(4)
-                .extracting(PostListResponse::getTitle, PostListResponse::getContent)
+        assertThat(posts).hasSize(2)
+                .extracting(PostListQuery::getTitle, PostListQuery::getContent)
                 .containsExactlyInAnyOrder(
                         tuple("title1", "content1"),
-                        tuple("title2", "content2"),
-                        tuple("title3", "content3"),
-                        tuple("title4", "content4")
+                        tuple("title2", "content2")
                 );
+    }
+
+    @Test
+    @DisplayName("id로 Post와 Post_id에 해당하는 Comment를 함께 조회할 수 있다")
+    void id로_Post와_Post_id에_해당하는_Comment를_함께_조회할_수_있다() {
+        //given
+        Long id = 1L;
+        //when
+        PostQuery result = postService.getByIdWithComment(id);
+        //then
+        assertThat(result).isNotNull();
+        assertThat(result.getComments().get(0).getContent().content()).isEqualTo("comment1");
+        assertThat(result.getComments().get(0).getId()).isEqualTo(1L);
+        assertThat(result.getComments().get(1).getContent().content()).isEqualTo("comment2");
+        assertThat(result.getComments().get(1).getId()).isEqualTo(2L);
+        assertThat(result.getTitle()).isEqualTo("title1");
+        assertThat(result.getContent()).isEqualTo("content1");
+        assertThat(result.getCategory().getName().name()).isEqualTo("category1");
+
+        // 스케줄링 테스트
+        await().atMost(20, TimeUnit.SECONDS).untilAsserted(() -> {
+            Post post = postRepository.getById(id);
+            assertThat(post.getView()).isEqualTo(1L);
+        });
     }
 
     @Test

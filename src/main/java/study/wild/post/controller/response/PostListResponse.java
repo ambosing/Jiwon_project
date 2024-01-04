@@ -1,20 +1,33 @@
 package study.wild.post.controller.response;
 
-import com.querydsl.core.annotations.QueryProjection;
+import lombok.Builder;
 import lombok.Getter;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import study.wild.post.infrastructure.PostListQuery;
+
+import java.util.List;
 
 @Getter
 public class PostListResponse {
-    private Long id;
-    private String title;
-    private String content;
-    private Long view;
+    private final Long id;
+    private final String title;
+    private final String content;
+    private final Long view;
 
-    @QueryProjection
-    public PostListResponse(Long id, String title, String content, Long view) {
-        this.id = id;
-        this.title = title;
-        this.content = content;
-        this.view = view;
+    @Builder
+    private PostListResponse(PostListQuery postListQuery) {
+        this.id = postListQuery.getId();
+        this.title = postListQuery.getTitle();
+        this.content = postListQuery.getContent();
+        this.view = postListQuery.getView();
+    }
+
+    public static Page<PostListResponse> from(Page<PostListQuery> posts) {
+        List<PostListResponse> postListResponses = posts.getContent().stream()
+                .map(PostListResponse::new)
+                .toList();
+
+        return new PageImpl<>(postListResponses, posts.getPageable(), posts.getTotalElements());
     }
 }

@@ -34,7 +34,7 @@ public class PostController {
             @RequestParam(value = "count", required = false) Long totalCount,
             Pageable pageable) {
         return ResponseEntity.ok()
-                .body(postService.getByCategoryId(categoryId, totalCount, pageable));
+                .body(PostListResponse.from(postService.getByCategoryId(categoryId, totalCount, pageable)));
     }
 
     @PostMapping
@@ -55,5 +55,11 @@ public class PostController {
     public ResponseEntity<Long> delete(@PathVariable("id") Long id) {
         return ResponseEntity.ok()
                 .body(postService.delete(id));
+    }
+
+    @GetMapping("/{id}/comments")
+    public ResponseEntity<PostResponse> getWithCommentById(@PathVariable("id") Long id) {
+        return ResponseEntity.ok()
+                .body(PostResponse.from(postService.getByIdWithComment(id)));
     }
 }

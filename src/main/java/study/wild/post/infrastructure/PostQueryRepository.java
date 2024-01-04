@@ -1,12 +1,14 @@
 package study.wild.post.infrastructure;
 
 import org.springframework.data.domain.Pageable;
-import study.wild.post.controller.response.PostListResponse;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface PostQueryRepository {
-    List<PostListResponse> findByCategoryId(Long categoryId, Pageable pageable);
+    List<PostListQuery> findByCategoryId(Long categoryId, Pageable pageable);
+
+    Optional<PostQuery> findWithCommentById(Long id);
 
     Long countByCategoryId(Long categoryId);
 }

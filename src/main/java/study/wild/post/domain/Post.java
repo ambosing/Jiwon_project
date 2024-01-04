@@ -61,4 +61,15 @@ public class Post {
                 .category(category)
                 .build();
     }
+
+    public Post updateView(Long view) {
+        return Post.builder()
+                .id(id)
+                .title(title.title())
+                .content(content.content())
+                .view(view)
+                .deletedDate(deletedDate)
+                .category(category)
+                .build();
+    }
 }

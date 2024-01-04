@@ -9,12 +9,15 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import study.wild.category.domain.Category;
 import study.wild.category.service.port.CategoryRepository;
+import study.wild.comment.domain.Comment;
+import study.wild.comment.service.port.CommentRepository;
 import study.wild.common.service.DatetimeHolder;
 import study.wild.post.controller.port.PostService;
-import study.wild.post.controller.response.PostListResponse;
 import study.wild.post.domain.Post;
 import study.wild.post.domain.PostCreate;
 import study.wild.post.domain.PostUpdate;
+import study.wild.post.infrastructure.PostListQuery;
+import study.wild.post.infrastructure.PostQuery;
 import study.wild.post.service.port.PostRepository;
 
 import java.util.List;
@@ -26,6 +29,8 @@ import java.util.List;
 public class PostServiceImpl implements PostService {
 
     private final PostRepository postRepository;
+    private final ViewService viewService;
+    private final CommentRepository commentRepository;
     private final CategoryRepository categoryRepository;
     private final DatetimeHolder datetimeHolder;
 
@@ -33,8 +38,16 @@ public class PostServiceImpl implements PostService {
         return postRepository.getById(id);
     }
 
-    public Page<PostListResponse> getByCategoryId(Long categoryId, Long totalCount, Pageable pageable) {
-        List<PostListResponse> posts = postRepository.getByCategoryId(categoryId, pageable);
+    public PostQuery getByIdWithComment(Long id) {
+        PostQuery postQuery = postRepository.getWithCommentById(id);
+        List<Comment> comments = commentRepository.getByPostId(id);
+        postQuery.setComments(comments);
+        viewService.incrementView(id);
+        return postQuery;
+    }
+
+    public Page<PostListQuery> getByCategoryId(Long categoryId, Long totalCount, Pageable pageable) {
+        List<PostListQuery> posts = postRepository.getByCategoryId(categoryId, pageable);
         Long count = countByCategoryId(categoryId, totalCount);
         return new PageImpl<>(posts, pageable, count);
     }
@@ -65,6 +78,4 @@ public class PostServiceImpl implements PostService {
         Post deletedPost = findPost.delete(datetimeHolder.now());
         return postRepository.save(deletedPost).getId();
     }
-
-
 }
