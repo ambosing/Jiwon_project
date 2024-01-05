@@ -192,6 +192,20 @@ class PostControllerTest {
     }
 
     @Test
+    @DisplayName("사용자는 상세 게시물을 조회할 때 없는 게시물 번호를 조회할 경우 에러가 발생한다")
+    void 사용자는_상세_게시물을_조회할_때_없는_게시물_번호를_조회할_경우_에러가_발생한다() {
+        //given
+        TestPostContainer container = TestPostContainer.builder()
+                .datetimeHolder(LocalDateTime::now)
+                .build();
+        //when
+        //then
+        assertThatThrownBy(() -> container.postController.getWithCommentById(999999L))
+                .isInstanceOf(ResourceNotFoundException.class)
+                .hasMessage("Post에서 ID 999999를 찾을 수 없습니다.");
+    }
+
+    @Test
     @DisplayName("사용자는 새로운 게시물을 생성할 수 있다")
     void 사용자는_새로운_게시물을_생성할_수_있다() {
         //given

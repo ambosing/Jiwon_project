@@ -61,6 +61,17 @@ class PostServiceTest {
     }
 
     @Test
+    @DisplayName("없는 id로 상세 게시글 조회 시 에러가 발생한다")
+    void 없는_id로_상세_게시글_조회_시_에러가_발생한다() {
+        //given
+        //when
+        //then
+        assertThatThrownBy(() -> postService.getByIdWithComment(999999L))
+                .isInstanceOf(ResourceNotFoundException.class)
+                .hasMessage("Post에서 ID 999999를 찾을 수 없습니다.");
+    }
+
+    @Test
     @DisplayName("id로 없는 Post를 조회할 경우 에러가 발생한다")
     void id로_없는_Post를_조회할_경우_에러가_발생한다() {
         //given
