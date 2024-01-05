@@ -86,6 +86,9 @@ public class FakePostRepository implements PostRepository {
 
     @Override
     public PostQuery getWithCommentById(Long id) {
+        if (id == 999999) {
+            throw new ResourceNotFoundException("Post", id);
+        }
         return PostQuery.builder()
                 .id(id)
                 .title("title1")

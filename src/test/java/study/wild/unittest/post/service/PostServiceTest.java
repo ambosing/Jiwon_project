@@ -49,7 +49,9 @@ class PostServiceTest {
         postService = PostServiceImpl.builder()
                 .datetimeHolder(() -> LocalDateTime.of(2023, 12, 25, 0, 0))
                 .postRepository(postRepository)
+                .commentRepository(commentRepository)
                 .categoryRepository(categoryRepository)
+                .viewService(new ViewService(postRepository))
                 .build();
     }
 
@@ -194,6 +196,17 @@ class PostServiceTest {
                         tuple("title1", "content1"),
                         tuple("title2", "content2")
                 );
+    }
+
+    @Test
+    @DisplayName("없는 id로 상세 게시글 조회 시 에러가 발생한다")
+    void 없는_id로_상세_게시글_조회_시_에러가_발생한다() {
+        //given
+        //when
+        //then
+        assertThatThrownBy(() -> postService.getByIdWithComment(999999L))
+                .isInstanceOf(ResourceNotFoundException.class)
+                .hasMessage("Post에서 ID 999999를 찾을 수 없습니다.");
     }
 
     @Test
