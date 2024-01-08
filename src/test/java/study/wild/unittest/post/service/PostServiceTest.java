@@ -95,7 +95,7 @@ class PostServiceTest {
                 .viewService(viewService)
                 .datetimeHolder(() -> LocalDateTime.of(2023, 12, 25, 0, 0))
                 .build();
-        Long id = 1L;
+        Long no = 1L;
         Category category = Category.builder()
                 .name("category")
                 .build();
@@ -108,17 +108,19 @@ class PostServiceTest {
                 .content("comment2")
                 .build();
         PostQuery postQuery = PostQuery.builder()
-                .id(id)
+                .id(no)
                 .title("title1")
                 .content("content1")
                 .categoryId(category.getId())
                 .categoryName(category.getName().name())
+                .userNo(1L)
+                .userName("user")
                 .view(1L)
                 .build();
-        when(postRepository.getWithCommentById(id)).thenReturn(postQuery);
-        when(commentRepository.getByPostId(id)).thenReturn(List.of(comment1, comment2));
+        when(postRepository.getWithCommentById(no)).thenReturn(postQuery);
+        when(commentRepository.getByPostNo(no)).thenReturn(List.of(comment1, comment2));
         //when
-        PostQuery result = postService.getByIdWithComment(id);
+        PostQuery result = postService.getByIdWithComment(no);
         //then
         assertThat(result).isNotNull();
         assertThat(result.getComments().get(0).getContent().content()).isEqualTo("comment1");
@@ -127,6 +129,8 @@ class PostServiceTest {
         assertThat(result.getComments().get(1).getId()).isEqualTo(2L);
         assertThat(result.getTitle()).isEqualTo("title1");
         assertThat(result.getContent()).isEqualTo("content1");
+        assertThat(result.getUser().getNo()).isEqualTo(1L);
+        assertThat(result.getUser().getName()).isEqualTo("user");
         assertThat(result.getView()).isEqualTo(1L);
     }
 

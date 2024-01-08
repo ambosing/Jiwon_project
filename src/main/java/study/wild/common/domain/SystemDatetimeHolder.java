@@ -1,7 +1,7 @@
 package study.wild.common.domain;
 
 import org.springframework.stereotype.Component;
-import study.wild.common.service.DatetimeHolder;
+import study.wild.common.service.port.DatetimeHolder;
 
 import java.time.LocalDateTime;
 

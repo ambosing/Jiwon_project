@@ -10,6 +10,7 @@ import java.util.Optional;
 
 import static study.wild.category.infrastructure.QCategoryEntity.categoryEntity;
 import static study.wild.post.infrastructure.QPostEntity.postEntity;
+import static study.wild.user.infrastructure.QUserEntity.userEntity;
 
 public class PostQueryRepositoryImpl implements PostQueryRepository {
     private final JPAQueryFactory queryFactory;
@@ -42,9 +43,12 @@ public class PostQueryRepositoryImpl implements PostQueryRepository {
                         postEntity.view,
                         postEntity.createdDate,
                         categoryEntity.id,
-                        categoryEntity.name
+                        categoryEntity.name,
+                        userEntity.no,
+                        userEntity.name
                 )).from(postEntity)
                 .join(postEntity.category, categoryEntity)
+                .join(postEntity.user, userEntity)
                 .where(postIdEqual(id),
                         deletedIsNull())
                 .fetchOne();

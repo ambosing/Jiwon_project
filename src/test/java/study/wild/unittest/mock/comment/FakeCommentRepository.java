@@ -39,9 +39,9 @@ public class FakeCommentRepository implements CommentRepository {
     }
 
     @Override
-    public List<Comment> getByPostId(Long postId) {
+    public List<Comment> getByPostNo(Long postNo) {
         return data.stream()
-                .filter(item -> item.getPost().getId().equals(postId))
+                .filter(item -> item.getPost().getId().equals(postNo))
                 .toList();
     }
 

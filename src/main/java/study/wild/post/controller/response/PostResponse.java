@@ -8,6 +8,7 @@ import study.wild.comment.controller.response.CommentListResponse;
 import study.wild.comment.domain.Comment;
 import study.wild.post.domain.Post;
 import study.wild.post.infrastructure.PostQuery;
+import study.wild.user.controller.response.UserSimpleResponse;
 
 import java.util.List;
 
@@ -20,15 +21,17 @@ public class PostResponse {
     private Long view;
     private CommentListResponse comments;
     private CategoryResponse category;
+    private UserSimpleResponse user;
 
     @Builder
-    private PostResponse(Long id, String title, String content, Long view, List<Comment> comments, CategoryResponse category) {
+    private PostResponse(Long id, String title, String content, Long view, List<Comment> comments, CategoryResponse category, UserSimpleResponse user) {
         this.id = id;
         this.title = title;
         this.content = content;
         this.view = view;
         this.comments = CommentListResponse.from(comments);
         this.category = category;
+        this.user = user;
     }
 
     public static PostResponse from(Post post) {
@@ -48,6 +51,7 @@ public class PostResponse {
                 .content(postQuery.getContent())
                 .view(postQuery.getView())
                 .category(CategoryResponse.from(postQuery.getCategory()))
+                .user(UserSimpleResponse.from(postQuery.getUser()))
                 .comments(postQuery.getComments())
                 .build();
     }

@@ -6,6 +6,7 @@ import lombok.Getter;
 import lombok.Setter;
 import study.wild.category.domain.Category;
 import study.wild.comment.domain.Comment;
+import study.wild.user.domain.User;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -13,7 +14,6 @@ import java.util.List;
 @Getter
 @Setter
 public class PostQuery {
-
     private final Long id;
     private final String title;
     private final String content;
@@ -21,15 +21,20 @@ public class PostQuery {
     private final LocalDateTime createdDate;
     private List<Comment> comments;
     private final Category category;
+    private final User user;
 
     @Builder
     @QueryProjection
-    public PostQuery(Long id, String title, String content, Long view, LocalDateTime createdDate, Long categoryId, String categoryName) {
+    public PostQuery(Long id, String title, String content, Long view, LocalDateTime createdDate, Long categoryId, String categoryName, Long userNo, String userName) {
         this.id = id;
         this.title = title;
         this.content = content;
         this.view = view;
         this.createdDate = createdDate;
+        this.user = User.builder()
+                .no(userNo)
+                .name(userName)
+                .build();
         this.category = Category.builder()
                 .id(categoryId)
                 .name(categoryName)

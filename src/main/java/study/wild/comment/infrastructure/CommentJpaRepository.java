@@ -8,5 +8,5 @@ import java.util.Optional;
 public interface CommentJpaRepository extends JpaRepository<CommentEntity, Long> {
     Optional<CommentEntity> findByIdAndDeletedDateIsNull(Long id);
 
-    List<CommentEntity> findByPostIdAndDeletedDateIsNull(Long postId);
+    List<CommentEntity> findByPostIdAndDeletedDateIsNull(Long postNo);
 }

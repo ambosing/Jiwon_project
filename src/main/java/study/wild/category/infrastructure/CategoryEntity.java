@@ -7,11 +7,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import study.wild.category.domain.Category;
 import study.wild.common.infrastructure.BaseTimeEntity;
-import study.wild.post.infrastructure.PostEntity;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
 
 @Getter
 @Entity
@@ -25,9 +22,6 @@ public class CategoryEntity extends BaseTimeEntity {
 
     @Column(nullable = false)
     private String name;
-
-    @OneToMany(mappedBy = "category")
-    private final List<PostEntity> post = new ArrayList<>();
 
     @Column
     private LocalDateTime deletedDate;
