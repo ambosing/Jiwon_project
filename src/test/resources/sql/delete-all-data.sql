@@ -1,4 +1,7 @@
 delete
+from `users`
+where 1;
+delete
 from `comment`
 where 1;
 delete

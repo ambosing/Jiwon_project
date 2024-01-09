@@ -1,5 +1,6 @@
-package study.wild.user.infrastructure;
+package study.wild.user.domain;
 
+import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotEmpty;
 import lombok.Builder;
 import lombok.Getter;
@@ -9,8 +10,10 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class UserCreate {
     @NotEmpty
+    @Min(4)
     private String id;
     @NotEmpty
+    @Min(8)
     private String password;
     @NotEmpty
     private String name;

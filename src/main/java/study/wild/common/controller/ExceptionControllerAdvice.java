@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
+import study.wild.common.domain.DuplicateResourceException;
 import study.wild.common.domain.ResourceNotFoundException;
 
 import java.util.HashMap;
@@ -32,10 +33,17 @@ public class ExceptionControllerAdvice {
     }
 
     @ResponseBody
-    @ExceptionHandler(IllegalArgumentException.class)
     @ResponseStatus(BAD_REQUEST)
-    public ResponseEntity<String> handleIllegalArgumentException(IllegalArgumentException ex) {
-        return ResponseEntity.status(BAD_REQUEST).body(ex.getMessage());
+    @ExceptionHandler(IllegalArgumentException.class)
+    public ResponseEntity<String> handleIllegalArgumentException(IllegalArgumentException exception) {
+        return ResponseEntity.status(BAD_REQUEST).body(exception.getMessage());
+    }
+
+    @ResponseBody
+    @ResponseStatus(BAD_REQUEST)
+    @ExceptionHandler(DuplicateResourceException.class)
+    public ResponseEntity<String> handleDuplicateResourceException(DuplicateResourceException exception) {
+        return ResponseEntity.status(BAD_REQUEST).body(exception.getMessage());
     }
 
     @ResponseBody
