@@ -10,7 +10,7 @@ import study.wild.category.domain.Category;
 import study.wild.category.domain.CategoryCreate;
 import study.wild.category.domain.CategoryUpdate;
 import study.wild.category.service.port.CategoryRepository;
-import study.wild.common.service.DatetimeHolder;
+import study.wild.common.service.port.DatetimeHolder;
 
 import java.util.List;
 

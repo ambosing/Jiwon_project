@@ -8,6 +8,7 @@ import lombok.NoArgsConstructor;
 import study.wild.category.infrastructure.CategoryEntity;
 import study.wild.common.infrastructure.BaseTimeEntity;
 import study.wild.post.domain.Post;
+import study.wild.user.infrastructure.UserEntity;
 
 import java.time.LocalDateTime;
 
@@ -32,17 +33,22 @@ public class PostEntity extends BaseTimeEntity {
     @JoinColumn(name = "category_id")
     private CategoryEntity category;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_no")
+    private UserEntity user;
+
     @Column
     private LocalDateTime deletedDate;
 
 
     @Builder
-    private PostEntity(Long id, String title, String content, Long view, CategoryEntity category, LocalDateTime deletedDate) {
+    private PostEntity(Long id, String title, String content, Long view, CategoryEntity category, UserEntity user, LocalDateTime deletedDate) {
         this.id = id;
         this.title = title;
         this.content = content;
         this.view = view;
         this.category = category;
+        this.user = user;
         this.deletedDate = deletedDate;
     }
 

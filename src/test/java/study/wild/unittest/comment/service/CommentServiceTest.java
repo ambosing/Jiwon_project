@@ -59,7 +59,7 @@ class CommentServiceTest {
         assertThat(comment.getPost()).isEqualTo(post);
         assertThat(comment.getContent().content()).isEqualTo("content");
     }
-    
+
 
     @Test
     @DisplayName("Comment를 수정할 수 있다")

@@ -130,7 +130,9 @@ class PostServiceTest {
         assertThat(result.getComments().get(1).getId()).isEqualTo(2L);
         assertThat(result.getTitle()).isEqualTo("title1");
         assertThat(result.getContent()).isEqualTo("content1");
-        assertThat(result.getCategory().getName().name()).isEqualTo("category1");
+        assertThat(result.getCategory().getName()).isEqualTo("category1");
+        assertThat(result.getUser().getNo()).isEqualTo(1L);
+        assertThat(result.getUser().getName()).isEqualTo("jiwon");
 
         // 스케줄링 테스트
         await().atMost(20, TimeUnit.SECONDS).untilAsserted(() -> {

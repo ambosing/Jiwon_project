@@ -5,7 +5,7 @@ import study.wild.category.controller.CategoryController;
 import study.wild.category.controller.port.CategoryService;
 import study.wild.category.service.CategoryServiceImpl;
 import study.wild.category.service.port.CategoryRepository;
-import study.wild.common.service.DatetimeHolder;
+import study.wild.common.service.port.DatetimeHolder;
 
 public class TestCategoryContainer {
     public final CategoryRepository categoryRepository;

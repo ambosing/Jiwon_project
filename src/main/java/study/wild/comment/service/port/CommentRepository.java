@@ -10,5 +10,5 @@ public interface CommentRepository {
 
     Comment save(Comment comment);
 
-    List<Comment> getByPostId(Long postId);
+    List<Comment> getByPostNo(Long postNo);
 }

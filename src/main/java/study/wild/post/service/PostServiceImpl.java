@@ -11,7 +11,7 @@ import study.wild.category.domain.Category;
 import study.wild.category.service.port.CategoryRepository;
 import study.wild.comment.domain.Comment;
 import study.wild.comment.service.port.CommentRepository;
-import study.wild.common.service.DatetimeHolder;
+import study.wild.common.service.port.DatetimeHolder;
 import study.wild.post.controller.port.PostService;
 import study.wild.post.domain.Post;
 import study.wild.post.domain.PostCreate;
@@ -40,7 +40,7 @@ public class PostServiceImpl implements PostService {
 
     public PostQuery getByIdWithComment(Long id) {
         PostQuery postQuery = postRepository.getWithCommentById(id);
-        List<Comment> comments = commentRepository.getByPostId(id);
+        List<Comment> comments = commentRepository.getByPostNo(id);
         postQuery.setComments(comments);
         viewService.incrementView(id);
         return postQuery;

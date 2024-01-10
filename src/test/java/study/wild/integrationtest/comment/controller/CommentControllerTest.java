@@ -18,6 +18,7 @@ import study.wild.comment.infrastructure.CommentJpaRepository;
 import study.wild.common.domain.ResourceNotFoundException;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
@@ -47,7 +48,7 @@ class CommentControllerTest {
                 .build();
         //when
         //then
-        mockMvc.perform(post("/comment")
+        mockMvc.perform(post("/comment").with(csrf())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(commentCreate)))
                 .andExpect(status().isCreated())
@@ -65,7 +66,7 @@ class CommentControllerTest {
                 .build();
         //when
         //then
-        mockMvc.perform(post("/comment")
+        mockMvc.perform(post("/comment").with(csrf())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(commentCreate)))
                 .andExpect(status().isBadRequest());
@@ -81,7 +82,7 @@ class CommentControllerTest {
                 .build();
         //when
         //then
-        mockMvc.perform(patch("/comment/1")
+        mockMvc.perform(patch("/comment/1").with(csrf())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(commentUpdate)))
                 .andExpect(status().isOk())
@@ -99,7 +100,7 @@ class CommentControllerTest {
                 .build();
         //when
         //then
-        mockMvc.perform(patch("/comment/1")
+        mockMvc.perform(patch("/comment/1").with(csrf())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(commentUpdate)))
                 .andExpect(status().isBadRequest());
@@ -111,7 +112,7 @@ class CommentControllerTest {
         //given
         //when
         //then
-        mockMvc.perform(delete("/comment/1"))
+        mockMvc.perform(delete("/comment/1").with(csrf()))
                 .andExpect(status().isOk())
                 .andExpect(content().string("1"));
 
@@ -127,7 +128,7 @@ class CommentControllerTest {
         Long notFoundId = 9999999L;
         //when
         //then
-        mockMvc.perform(delete("/comment/{id}", notFoundId))
+        mockMvc.perform(delete("/comment/{id}", notFoundId).with(csrf()))
                 .andExpect(status().isNotFound());
     }
 }

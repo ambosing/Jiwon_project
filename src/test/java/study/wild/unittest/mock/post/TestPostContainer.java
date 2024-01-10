@@ -3,7 +3,7 @@ package study.wild.unittest.mock.post;
 import lombok.Builder;
 import study.wild.category.service.port.CategoryRepository;
 import study.wild.comment.service.port.CommentRepository;
-import study.wild.common.service.DatetimeHolder;
+import study.wild.common.service.port.DatetimeHolder;
 import study.wild.post.controller.PostController;
 import study.wild.post.controller.port.PostService;
 import study.wild.post.service.PostServiceImpl;

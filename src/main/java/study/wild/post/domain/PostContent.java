@@ -2,8 +2,9 @@ package study.wild.post.domain;
 
 import lombok.Builder;
 
-@Builder
 public record PostContent(String content) {
+
+    @Builder
     public PostContent {
         validateEmptyString(content);
     }

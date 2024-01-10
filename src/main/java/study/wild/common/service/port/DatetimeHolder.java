@@ -1,4 +1,4 @@
-package study.wild.common.service;
+package study.wild.common.service.port;
 
 import java.time.LocalDateTime;
 

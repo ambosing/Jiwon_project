@@ -27,7 +27,7 @@ public class CommentRepositoryImpl implements CommentRepository {
     }
 
     @Override
-    public List<Comment> getByPostId(Long postId) {
+    public List<Comment> getByPostNo(Long postId) {
         return commentJpaRepository.findByPostIdAndDeletedDateIsNull(postId)
                 .stream()
                 .map(CommentEntity::toDomain)

@@ -6,7 +6,7 @@ import study.wild.comment.controller.CommentController;
 import study.wild.comment.controller.port.CommentService;
 import study.wild.comment.service.CommentServiceImpl;
 import study.wild.comment.service.port.CommentRepository;
-import study.wild.common.service.DatetimeHolder;
+import study.wild.common.service.port.DatetimeHolder;
 import study.wild.post.service.port.PostRepository;
 import study.wild.unittest.mock.category.FakeCategoryRepository;
 import study.wild.unittest.mock.post.FakePostRepository;
