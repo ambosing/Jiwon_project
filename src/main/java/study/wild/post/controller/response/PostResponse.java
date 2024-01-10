@@ -50,8 +50,8 @@ public class PostResponse {
                 .title(postQuery.getTitle())
                 .content(postQuery.getContent())
                 .view(postQuery.getView())
-                .category(CategoryResponse.from(postQuery.getCategory()))
-                .user(UserResponse.from(postQuery.getUser()))
+                .category(postQuery.getCategory())
+                .user(postQuery.getUser())
                 .comments(postQuery.getComments())
                 .build();
     }

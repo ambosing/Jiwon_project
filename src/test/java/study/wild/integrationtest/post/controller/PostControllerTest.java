@@ -16,6 +16,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import study.wild.post.domain.PostCreate;
 import study.wild.post.domain.PostUpdate;
 
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
@@ -135,7 +136,7 @@ class PostControllerTest {
                 .build();
         //when
         //then
-        mockMvc.perform(post("/posts")
+        mockMvc.perform(post("/posts").with(csrf())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(postCreate)))
                 .andExpect(status().isCreated())
@@ -156,7 +157,7 @@ class PostControllerTest {
                 .build();
         //when
         //then
-        mockMvc.perform(patch("/posts/1")
+        mockMvc.perform(patch("/posts/1").with(csrf())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(postUpdate)))
                 .andExpect(status().isOk())
@@ -171,7 +172,7 @@ class PostControllerTest {
         //given
         //when
         //then
-        mockMvc.perform(delete("/posts/1"))
+        mockMvc.perform(delete("/posts/1").with(csrf()))
                 .andExpect(status().isOk())
                 .andExpect(content().string("1"));
     }

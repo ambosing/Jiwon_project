@@ -14,6 +14,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import study.wild.category.domain.CategoryCreate;
 import study.wild.category.domain.CategoryUpdate;
 
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
@@ -88,7 +89,7 @@ class CategoryControllerTest {
                 .build();
         //when
         //then
-        mockMvc.perform(post("/categories")
+        mockMvc.perform(post("/categories").with(csrf())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(createTest)))
                 .andExpect(status().isCreated())
@@ -106,7 +107,7 @@ class CategoryControllerTest {
                 .build();
         //when
         //then
-        mockMvc.perform(patch("/categories/1")
+        mockMvc.perform(patch("/categories/1").with(csrf())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(updateTest)))
                 .andExpect(status().isOk())
@@ -123,7 +124,7 @@ class CategoryControllerTest {
                 .build();
         //when
         //then
-        mockMvc.perform(patch("/categories/1")
+        mockMvc.perform(patch("/categories/1").with(csrf())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(updateTest)))
                 .andExpect(status().isBadRequest())
@@ -139,7 +140,7 @@ class CategoryControllerTest {
                 .build();
         //when
         //then
-        mockMvc.perform(patch("/categories/1")
+        mockMvc.perform(patch("/categories/1").with(csrf())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(updateTest)))
                 .andExpect(status().isBadRequest())
@@ -152,7 +153,7 @@ class CategoryControllerTest {
         //given
         //when
         //then
-        mockMvc.perform(delete("/categories/1"))
+        mockMvc.perform(delete("/categories/1").with(csrf()))
                 .andExpect(status().isOk())
                 .andExpect(content().string("1"));
     }

@@ -4,9 +4,9 @@ import com.querydsl.core.annotations.QueryProjection;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
-import study.wild.category.domain.Category;
+import study.wild.category.controller.response.CategoryResponse;
 import study.wild.comment.domain.Comment;
-import study.wild.user.domain.User;
+import study.wild.user.controller.response.response.UserResponse;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -20,8 +20,8 @@ public class PostQuery {
     private final Long view;
     private final LocalDateTime createdDate;
     private List<Comment> comments;
-    private final Category category;
-    private final User user;
+    private final CategoryResponse category;
+    private final UserResponse user;
 
     @Builder
     @QueryProjection
@@ -31,11 +31,11 @@ public class PostQuery {
         this.content = content;
         this.view = view;
         this.createdDate = createdDate;
-        this.user = User.builder()
+        this.user = UserResponse.builder()
                 .no(userNo)
                 .name(userName)
                 .build();
-        this.category = Category.builder()
+        this.category = CategoryResponse.builder()
                 .id(categoryId)
                 .name(categoryName)
                 .build();
