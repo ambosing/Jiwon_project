@@ -11,13 +11,16 @@ import lombok.NoArgsConstructor;
 public class CommentCreate {
     @NotNull
     private Long postId;
+    @NotNull
+    private Long userNo;
 
     @NotEmpty
     private String content;
 
     @Builder
-    private CommentCreate(Long postId, String content) {
+    public CommentCreate(Long postId, Long userNo, String content) {
         this.postId = postId;
+        this.userNo = userNo;
         this.content = content;
     }
 }

@@ -10,7 +10,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import study.wild.category.domain.Category;
 import study.wild.category.service.port.CategoryRepository;
-import study.wild.comment.domain.Comment;
+import study.wild.comment.infrastructure.CommentQuery;
 import study.wild.comment.service.port.CommentRepository;
 import study.wild.common.domain.ResourceNotFoundException;
 import study.wild.post.controller.port.PostService;
@@ -99,13 +99,17 @@ class PostServiceTest {
         Category category = Category.builder()
                 .name("category")
                 .build();
-        Comment comment1 = Comment.builder()
+        CommentQuery comment1 = CommentQuery.builder()
                 .id(1L)
                 .content("comment1")
+                .userNo(1L)
+                .userId("ambosing1")
                 .build();
-        Comment comment2 = Comment.builder()
+        CommentQuery comment2 = CommentQuery.builder()
                 .id(2L)
                 .content("comment2")
+                .userNo(2L)
+                .userId("ambosing2")
                 .build();
         PostQuery postQuery = PostQuery.builder()
                 .id(no)
@@ -118,14 +122,14 @@ class PostServiceTest {
                 .view(1L)
                 .build();
         when(postRepository.getWithCommentById(no)).thenReturn(postQuery);
-        when(commentRepository.getByPostNo(no)).thenReturn(List.of(comment1, comment2));
+        when(commentRepository.getByPostId(no)).thenReturn(List.of(comment1, comment2));
         //when
         PostQuery result = postService.getByIdWithComment(no);
         //then
         assertThat(result).isNotNull();
-        assertThat(result.getComments().get(0).getContent().content()).isEqualTo("comment1");
+        assertThat(result.getComments().get(0).getContent()).isEqualTo("comment1");
         assertThat(result.getComments().get(0).getId()).isEqualTo(1L);
-        assertThat(result.getComments().get(1).getContent().content()).isEqualTo("comment2");
+        assertThat(result.getComments().get(1).getContent()).isEqualTo("comment2");
         assertThat(result.getComments().get(1).getId()).isEqualTo(2L);
         assertThat(result.getTitle()).isEqualTo("title1");
         assertThat(result.getContent()).isEqualTo("content1");

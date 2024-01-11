@@ -34,8 +34,10 @@ class CommentServiceTest {
     void 새로운_Comment_생성할_수_있다() {
         //given
         Long postId = 1L;
+        Long userId = 1L;
         CommentCreate commentCreate = CommentCreate.builder()
                 .postId(postId)
+                .userNo(userId)
                 .content("CreateTest")
                 .build();
         //when
@@ -53,6 +55,7 @@ class CommentServiceTest {
         CommentUpdate commentUpdate = CommentUpdate.builder()
                 .content("updateTest")
                 .postId(1L)
+                .userNo(1L)
                 .build();
         //when
         Comment updatedComment = commentService.update(1L, commentUpdate);

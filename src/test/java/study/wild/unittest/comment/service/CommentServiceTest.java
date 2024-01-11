@@ -14,6 +14,9 @@ import study.wild.post.domain.Post;
 import study.wild.post.service.port.PostRepository;
 import study.wild.unittest.mock.comment.FakeCommentRepository;
 import study.wild.unittest.mock.post.FakePostRepository;
+import study.wild.unittest.mock.user.FakeUserRepository;
+import study.wild.user.domain.User;
+import study.wild.user.service.port.UserRepository;
 
 import java.time.LocalDateTime;
 
@@ -25,14 +28,17 @@ class CommentServiceTest {
     private CommentRepository commentRepository;
     private PostRepository postRepository;
     private CommentService commentService;
+    private UserRepository userRepository;
 
     @BeforeEach
     void setUp() {
+        userRepository = new FakeUserRepository();
         postRepository = new FakePostRepository();
         commentRepository = new FakeCommentRepository();
         commentService = CommentServiceImpl.builder()
                 .commentRepository(commentRepository)
                 .postRepository(postRepository)
+                .userRepository(userRepository)
                 .datetimeHolder(() -> LocalDateTime.of(2023, 12, 31, 0, 0))
                 .build();
     }
@@ -47,10 +53,15 @@ class CommentServiceTest {
                         .content("content")
                         .build()
         );
-
+        User user = userRepository.save(User.builder()
+                .id("ambosing")
+                .name("jiwon")
+                .password("password")
+                .build());
         CommentCreate commentCreate = CommentCreate.builder()
                 .content("content")
                 .postId(post.getId())
+                .userNo(user.getNo())
                 .build();
         //when
         Comment comment = commentService.create(commentCreate);
@@ -71,14 +82,21 @@ class CommentServiceTest {
                         .content("content")
                         .build()
         );
+        User user = userRepository.save(User.builder()
+                .id("ambosing")
+                .name("jiwon")
+                .password("password")
+                .build());
         Comment comment = Comment.builder()
                 .content("content")
                 .post(post)
+                .user(user)
                 .build();
         Comment savedComment = commentRepository.save(comment);
         CommentUpdate commentUpdate = CommentUpdate.builder()
                 .content("updateTest")
                 .postId(post.getId())
+                .userNo(user.getNo())
                 .build();
         //when
         Comment updatedComment = commentService.update(savedComment.getId(), commentUpdate);

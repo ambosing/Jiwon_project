@@ -2,6 +2,7 @@ package study.wild.user.infrastructure;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
+import study.wild.common.domain.ResourceNotFoundException;
 import study.wild.user.domain.User;
 import study.wild.user.service.port.UserRepository;
 
@@ -20,5 +21,13 @@ public class UserRepositoryImpl implements UserRepository {
         return userJpaRepository
                 .findById(id)
                 .map(UserEntity::toDomain);
+    }
+
+    @Override
+    public User getByNo(Long no) {
+        return userJpaRepository
+                .findById(no)
+                .map(UserEntity::toDomain)
+                .orElseThrow(() -> new ResourceNotFoundException("User", no));
     }
 }

@@ -45,6 +45,7 @@ class CommentControllerTest {
         CommentCreate commentCreate = CommentCreate.builder()
                 .content("createTest")
                 .postId(1L)
+                .userNo(1L)
                 .build();
         //when
         //then
@@ -79,6 +80,7 @@ class CommentControllerTest {
         CommentUpdate commentUpdate = CommentUpdate.builder()
                 .content("update")
                 .postId(1L)
+                .userNo(1L)
                 .build();
         //when
         //then

@@ -124,9 +124,9 @@ class PostServiceTest {
         PostQuery result = postService.getByIdWithComment(id);
         //then
         assertThat(result).isNotNull();
-        assertThat(result.getComments().get(0).getContent().content()).isEqualTo("comment1");
+        assertThat(result.getComments().get(0).getContent()).isEqualTo("comment1");
         assertThat(result.getComments().get(0).getId()).isEqualTo(1L);
-        assertThat(result.getComments().get(1).getContent().content()).isEqualTo("comment2");
+        assertThat(result.getComments().get(1).getContent()).isEqualTo("comment2");
         assertThat(result.getComments().get(1).getId()).isEqualTo(2L);
         assertThat(result.getTitle()).isEqualTo("title1");
         assertThat(result.getContent()).isEqualTo("content1");

@@ -9,7 +9,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import study.wild.category.domain.Category;
 import study.wild.category.service.port.CategoryRepository;
-import study.wild.comment.domain.Comment;
+import study.wild.comment.infrastructure.CommentQuery;
 import study.wild.comment.service.port.CommentRepository;
 import study.wild.common.service.port.DatetimeHolder;
 import study.wild.post.controller.port.PostService;
@@ -40,7 +40,7 @@ public class PostServiceImpl implements PostService {
 
     public PostQuery getByIdWithComment(Long id) {
         PostQuery postQuery = postRepository.getWithCommentById(id);
-        List<Comment> comments = commentRepository.getByPostNo(id);
+        List<CommentQuery> comments = commentRepository.getByPostId(id);
         postQuery.setComments(comments);
         viewService.incrementView(id);
         return postQuery;

@@ -1,5 +1,6 @@
 package study.wild.unittest.mock.user;
 
+import study.wild.common.domain.ResourceNotFoundException;
 import study.wild.user.domain.User;
 import study.wild.user.service.port.UserRepository;
 
@@ -40,4 +41,13 @@ public class FakeUserRepository implements UserRepository {
                 .filter(item -> Objects.equals(item.getId().id(), id))
                 .findAny();
     }
+
+    @Override
+    public User getByNo(Long no) {
+        return data.stream()
+                .filter(item -> Objects.equals(item.getNo(), no))
+                .findAny()
+                .orElseThrow(() -> new ResourceNotFoundException("User", no));
+    }
+
 }
