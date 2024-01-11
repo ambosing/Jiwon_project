@@ -2,7 +2,7 @@ package study.wild.comment.controller.response;
 
 import lombok.Builder;
 import lombok.Getter;
-import study.wild.comment.domain.Comment;
+import study.wild.comment.infrastructure.CommentQuery;
 
 import java.util.List;
 
@@ -15,7 +15,7 @@ public class CommentListResponse {
         this.commentListResponse = commentListResponse;
     }
 
-    public static CommentListResponse from(List<Comment> comments) {
+    public static CommentListResponse from(List<CommentQuery> comments) {
         if (comments == null) {
             return null;
         }

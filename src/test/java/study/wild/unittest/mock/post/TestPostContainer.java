@@ -11,6 +11,8 @@ import study.wild.post.service.ViewService;
 import study.wild.post.service.port.PostRepository;
 import study.wild.unittest.mock.category.FakeCategoryRepository;
 import study.wild.unittest.mock.comment.FakeCommentRepository;
+import study.wild.unittest.mock.user.FakeUserRepository;
+import study.wild.user.service.port.UserRepository;
 
 
 public class TestPostContainer {
@@ -19,10 +21,12 @@ public class TestPostContainer {
     public final PostController postController;
     public final CategoryRepository categoryRepository;
     public final CommentRepository commentRepository;
+    public final UserRepository userRepository;
     public final ViewService viewService;
 
     @Builder
     public TestPostContainer(DatetimeHolder datetimeHolder) {
+        this.userRepository = new FakeUserRepository();
         this.categoryRepository = new FakeCategoryRepository();
         this.postRepository = new FakePostRepository();
         this.commentRepository = new FakeCommentRepository();

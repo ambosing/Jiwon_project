@@ -15,6 +15,7 @@ import study.wild.post.domain.Post;
 import study.wild.post.domain.PostCreate;
 import study.wild.post.domain.PostUpdate;
 import study.wild.unittest.mock.post.TestPostContainer;
+import study.wild.user.domain.User;
 
 import java.time.LocalDateTime;
 
@@ -62,6 +63,11 @@ class PostControllerTest {
         TestPostContainer container = TestPostContainer.builder()
                 .datetimeHolder(LocalDateTime::now)
                 .build();
+        User user = container.userRepository.save(User.builder()
+                .id("ambosing")
+                .name("jiwon")
+                .password("password")
+                .build());
         Category category = Category.builder()
                 .name("category")
                 .build();
@@ -75,11 +81,13 @@ class PostControllerTest {
         Comment comment1 = Comment.builder()
                 .id(1L)
                 .post(savedPost)
+                .user(user)
                 .content("comment1")
                 .build();
         Comment comment2 = Comment.builder()
                 .id(2L)
                 .post(savedPost)
+                .user(user)
                 .content("comment2")
                 .build();
         container.commentRepository.save(comment1);

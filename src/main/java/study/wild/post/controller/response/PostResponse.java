@@ -5,7 +5,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import study.wild.category.controller.response.CategoryResponse;
 import study.wild.comment.controller.response.CommentListResponse;
-import study.wild.comment.domain.Comment;
+import study.wild.comment.infrastructure.CommentQuery;
 import study.wild.post.domain.Post;
 import study.wild.post.infrastructure.PostQuery;
 import study.wild.user.controller.response.response.UserResponse;
@@ -24,7 +24,7 @@ public class PostResponse {
     private UserResponse user;
 
     @Builder
-    private PostResponse(Long id, String title, String content, Long view, List<Comment> comments, CategoryResponse category, UserResponse user) {
+    private PostResponse(Long id, String title, String content, Long view, List<CommentQuery> comments, CategoryResponse category, UserResponse user) {
         this.id = id;
         this.title = title;
         this.content = content;

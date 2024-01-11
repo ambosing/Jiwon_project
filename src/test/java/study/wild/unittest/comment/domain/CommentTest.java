@@ -7,6 +7,7 @@ import study.wild.comment.domain.Comment;
 import study.wild.comment.domain.CommentCreate;
 import study.wild.comment.domain.CommentUpdate;
 import study.wild.post.domain.Post;
+import study.wild.user.domain.User;
 
 import java.time.LocalDateTime;
 
@@ -27,8 +28,14 @@ class CommentTest {
                 .title("title")
                 .content("content")
                 .build();
+        User user = User.builder()
+                .no(1L)
+                .id("ambosing")
+                .name("jiwon")
+                .password("password")
+                .build();
         //when
-        Comment comment = Comment.fromCreate(post, commentCreate);
+        Comment comment = Comment.fromCreate(post, user, commentCreate);
         //then
         assertThat(comment.getContent().content()).isEqualTo("content");
         assertThat(comment.getPost().getId()).isEqualTo(1L);
@@ -43,6 +50,12 @@ class CommentTest {
         Comment comment = Comment.builder()
                 .id(1L)
                 .content("content")
+                .user(User.builder()
+                        .no(1L)
+                        .id("ambosing")
+                        .name("jiwon")
+                        .password("password")
+                        .build())
                 .build();
         //when
         CommentResponse commentResponse = CommentResponse.from(comment);
@@ -59,6 +72,12 @@ class CommentTest {
                 .title("title")
                 .content("content")
                 .build();
+        User user = User.builder()
+                .no(1L)
+                .id("ambosing")
+                .name("jiwon")
+                .password("password")
+                .build();
         Comment comment = Comment.builder()
                 .post(post)
                 .content("content")
@@ -67,7 +86,7 @@ class CommentTest {
                 .content("updateTest")
                 .build();
         //when
-        Comment updatedComment = comment.update(post, updateTest);
+        Comment updatedComment = comment.update(updateTest);
         //then
         assertThat(updatedComment.getContent().content()).isEqualTo("updateTest");
     }

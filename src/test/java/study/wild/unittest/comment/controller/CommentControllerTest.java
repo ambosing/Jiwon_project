@@ -12,6 +12,7 @@ import study.wild.comment.domain.CommentUpdate;
 import study.wild.common.domain.ResourceNotFoundException;
 import study.wild.post.domain.Post;
 import study.wild.unittest.mock.comment.TestCommentContainer;
+import study.wild.user.domain.User;
 
 import java.time.LocalDateTime;
 
@@ -35,9 +36,17 @@ class CommentControllerTest {
                 .category(savedCategory)
                 .build();
         Post savedPost = container.postRepository.save(post);
+        User user = User.builder()
+                .no(1L)
+                .id("ambosing")
+                .name("jiwon")
+                .password("password")
+                .build();
+        User savedUser = container.userRepository.save(user);
         CommentCreate commentCreate = CommentCreate.builder()
                 .content("comment")
                 .postId(savedPost.getId())
+                .userNo(savedUser.getNo())
                 .build();
         //when
         ResponseEntity<CommentResponse> result = container.commentController.create(commentCreate);
@@ -63,9 +72,17 @@ class CommentControllerTest {
                 .category(savedCategory)
                 .build();
         Post savedPost = container.postRepository.save(post);
+        User user = User.builder()
+                .no(1L)
+                .id("ambosing")
+                .name("jiwon")
+                .password("password")
+                .build();
+        User savedUser = container.userRepository.save(user);
         CommentCreate commentCreate = CommentCreate.builder()
                 .content("")
                 .postId(savedPost.getId())
+                .userNo(savedUser.getNo())
                 .build();
         //when
         //then
@@ -89,13 +106,22 @@ class CommentControllerTest {
                 .category(savedCategory)
                 .build();
         Post savedPost = container.postRepository.save(post);
+        User user = User.builder()
+                .no(1L)
+                .id("ambosing")
+                .name("jiwon")
+                .password("password")
+                .build();
+        User savedUser = container.userRepository.save(user);
         Comment comment = Comment.builder()
                 .content("create")
                 .post(savedPost)
+                .user(savedUser)
                 .build();
         Comment savedComment = container.commentRepository.save(comment);
         CommentUpdate updatedComment = CommentUpdate.builder()
                 .postId(savedPost.getId())
+                .userNo(savedUser.getNo())
                 .content("update")
                 .build();
         //when
@@ -121,13 +147,22 @@ class CommentControllerTest {
                 .category(savedCategory)
                 .build();
         Post savedPost = container.postRepository.save(post);
+        User user = User.builder()
+                .no(1L)
+                .id("ambosing")
+                .name("jiwon")
+                .password("password")
+                .build();
+        User savedUser = container.userRepository.save(user);
         Comment comment = Comment.builder()
                 .content("create")
                 .post(savedPost)
+                .user(savedUser)
                 .build();
         Comment savedComment = container.commentRepository.save(comment);
         CommentUpdate commentUpdate = CommentUpdate.builder()
                 .postId(savedPost.getId())
+                .userNo(savedUser.getNo())
                 .content("")
                 .build();
         //when

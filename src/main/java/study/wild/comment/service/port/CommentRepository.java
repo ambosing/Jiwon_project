@@ -1,6 +1,7 @@
 package study.wild.comment.service.port;
 
 import study.wild.comment.domain.Comment;
+import study.wild.comment.infrastructure.CommentQuery;
 
 import java.util.List;
 
@@ -10,5 +11,5 @@ public interface CommentRepository {
 
     Comment save(Comment comment);
 
-    List<Comment> getByPostNo(Long postNo);
+    List<CommentQuery> getByPostId(Long postIds);
 }

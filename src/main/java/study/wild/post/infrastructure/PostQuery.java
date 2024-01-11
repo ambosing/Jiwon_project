@@ -5,7 +5,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 import study.wild.category.controller.response.CategoryResponse;
-import study.wild.comment.domain.Comment;
+import study.wild.comment.infrastructure.CommentQuery;
 import study.wild.user.controller.response.response.UserResponse;
 
 import java.time.LocalDateTime;
@@ -19,7 +19,7 @@ public class PostQuery {
     private final String content;
     private final Long view;
     private final LocalDateTime createdDate;
-    private List<Comment> comments;
+    private List<CommentQuery> comments;
     private final CategoryResponse category;
     private final UserResponse user;
 

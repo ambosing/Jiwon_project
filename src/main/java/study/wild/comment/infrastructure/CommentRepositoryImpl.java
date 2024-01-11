@@ -27,10 +27,7 @@ public class CommentRepositoryImpl implements CommentRepository {
     }
 
     @Override
-    public List<Comment> getByPostNo(Long postId) {
-        return commentJpaRepository.findByPostIdAndDeletedDateIsNull(postId)
-                .stream()
-                .map(CommentEntity::toDomain)
-                .toList();
+    public List<CommentQuery> getByPostId(Long postId) {
+        return commentJpaRepository.getWithUserByPostId(postId);
     }
 }
