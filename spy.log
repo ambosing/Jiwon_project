@@ -258,3 +258,11 @@
 1704981701749|0|statement|connection 256|url jdbc:h2:mem:testdb|     drop table if exists comment cascade |     drop table if exists comment cascade 
 1704981701749|0|statement|connection 256|url jdbc:h2:mem:testdb|     drop table if exists post cascade |     drop table if exists post cascade 
 1704981701750|0|statement|connection 256|url jdbc:h2:mem:testdb|     drop table if exists users cascade |     drop table if exists users cascade 
+1705305439402|0|statement|connection 263|url jdbc:h2:mem:testdb|     drop table if exists category cascade |     drop table if exists category cascade 
+1705305439402|0|statement|connection 263|url jdbc:h2:mem:testdb|     drop table if exists comment cascade |     drop table if exists comment cascade 
+1705305439402|0|statement|connection 263|url jdbc:h2:mem:testdb|     drop table if exists post cascade |     drop table if exists post cascade 
+1705305439403|0|statement|connection 263|url jdbc:h2:mem:testdb|     drop table if exists users cascade |     drop table if exists users cascade 
+1705305439408|0|statement|connection 264|url jdbc:h2:mem:testdb|     drop table if exists category cascade |     drop table if exists category cascade 
+1705305439408|0|statement|connection 264|url jdbc:h2:mem:testdb|     drop table if exists comment cascade |     drop table if exists comment cascade 
+1705305439409|0|statement|connection 264|url jdbc:h2:mem:testdb|     drop table if exists post cascade |     drop table if exists post cascade 
+1705305439409|0|statement|connection 264|url jdbc:h2:mem:testdb|     drop table if exists users cascade |     drop table if exists users cascade 

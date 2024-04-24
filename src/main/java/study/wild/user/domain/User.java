@@ -38,4 +38,15 @@ public class User {
                 .password(passwordEncoder.encode(userCreate.getPassword()))
                 .build();
     }
+
+    public User delete() {
+        return User.builder()
+                .no(no)
+                .id(id.id())
+                .password(password.password())
+                .name(name.name())
+                .createdDate(createdDate)
+                .deletedDate(LocalDateTime.now())
+                .build();
+    }
 }

@@ -78,4 +78,20 @@ public class UserTest {
                 .isInstanceOf(IllegalArgumentException.class)
                 .hasMessage("id는 4자 이상 입력해주세요.");
     }
+
+    @Test
+    @DisplayName("유저를 삭제상태로 만들 수 있다")
+    void 유저를_삭제상태로_만들_수_있다() {
+        //given
+        User user = User.builder()
+                .id("ambosing")
+                .name("jiwon")
+                .password("password")
+                .build();
+        //when
+        User deletedUser = user.delete();
+        //then
+        assertThat(user.getId()).isEqualTo(deletedUser.getId());
+        assertThat(deletedUser.getDeletedDate()).isNotNull();
+    }
 }

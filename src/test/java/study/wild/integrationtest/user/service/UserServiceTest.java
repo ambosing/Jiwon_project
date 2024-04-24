@@ -16,6 +16,7 @@ import study.wild.common.domain.DuplicateResourceException;
 import study.wild.user.controller.response.port.UserService;
 import study.wild.user.domain.User;
 import study.wild.user.domain.UserCreate;
+import study.wild.user.service.port.UserRepository;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
@@ -31,6 +32,8 @@ class UserServiceTest {
 
     @Autowired
     private UserService userService;
+    @Autowired
+    private UserRepository userRepository;
 
     @MockBean
     private PasswordEncoder passwordEncoder;
@@ -73,5 +76,23 @@ class UserServiceTest {
         assertThatThrownBy(() -> userService.create(userCreate))
                 .isInstanceOf(DuplicateResourceException.class)
                 .hasMessage("User에서 ID ambosing1가 이미 존재합니다.");
+    }
+
+    @Test
+    @DisplayName("유저를 삭제할 수 있다")
+    void 유저를_삭제할_수_있다() {
+        //given
+        User user = User.builder()
+                .id("ambosing")
+                .name("jiwon")
+                .password("password")
+                .build();
+        User savedUser = userRepository.save(user);
+        //when
+        Long deletedNo = userService.delete(savedUser.getNo());
+        //then
+        assertThat(deletedNo).isEqualTo(savedUser.getNo());
+        User user1 = userRepository.getByNo(savedUser.getNo());
+        assertThat(user1.getDeletedDate()).isNotNull();
     }
 }

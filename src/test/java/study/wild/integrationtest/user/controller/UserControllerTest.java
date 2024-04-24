@@ -15,6 +15,7 @@ import study.wild.user.controller.UserController;
 import study.wild.user.domain.UserCreate;
 
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
@@ -33,7 +34,7 @@ class UserControllerTest {
     @Autowired
     private UserController userController;
 
-    private ObjectMapper objectMapper = new ObjectMapper();
+    private final ObjectMapper objectMapper = new ObjectMapper();
 
     @Test
     @DisplayName("비회원인 사용자는 회원 가입을 할 수 있다")
@@ -71,5 +72,28 @@ class UserControllerTest {
                         .content(objectMapper.writeValueAsString(userCreate)))
                 .andExpect(status().isBadRequest())
                 .andExpect(content().string("User에서 ID ambosing1가 이미 존재합니다."));
+    }
+
+    @Test
+    @DisplayName("사용자는 계정을 삭제할 수 있다")
+    void 사용자는_계정을_삭제할_수_있다() throws Exception {
+        //given
+        Long deleteNo = 1L;
+        //when
+        //then
+        mockMvc.perform(delete("/users/{no}", deleteNo).with(csrf()))
+                .andExpect(status().isOk())
+                .andExpect(content().string(deleteNo.toString()));
+    }
+
+    @Test
+    @DisplayName("사용자는 없는 계정을 삭제할 수 없다")
+    void 사용자는_없는_계정을_삭제할_수_없다() throws Exception {
+        //given
+        //when
+        //then
+        mockMvc.perform(delete("/users/{no}", 9999999L).with(csrf()))
+                .andExpect(status().isNotFound())
+                .andExpect(content().string("User에서 ID 9999999를 찾을 수 없습니다."));
     }
 }

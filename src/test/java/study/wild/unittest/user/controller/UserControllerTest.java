@@ -5,6 +5,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import study.wild.common.domain.DuplicateResourceException;
+import study.wild.common.domain.ResourceNotFoundException;
 import study.wild.unittest.mock.common.TestPasswordEncoder;
 import study.wild.unittest.mock.user.TestUserContainer;
 import study.wild.user.controller.response.response.UserResponse;
@@ -61,5 +62,41 @@ class UserControllerTest {
         assertThatThrownBy(() -> container.userController.signup(userCreate))
                 .isInstanceOf(DuplicateResourceException.class)
                 .hasMessage("User에서 ID ambosing가 이미 존재합니다.");
+    }
+
+    @Test
+    @DisplayName("사용자는 계정을 삭제할 수 있다")
+    void 사용자는_계정을_삭제할_수_있다() {
+        //given
+        User user = User.builder()
+                .no(1L)
+                .id("ambosing")
+                .name("jiwon")
+                .password("password")
+                .build();
+        TestUserContainer container = TestUserContainer.builder()
+                .passwordEncoder(new TestPasswordEncoder())
+                .build();
+        container.userRepository.save(user);
+        //when
+        ResponseEntity<Long> result = container.userController.delete(1L);
+        //then
+        assertThat(result.getStatusCode()).isEqualTo(HttpStatus.OK);
+        assertThat(result.getBody()).isNotNull();
+        assertThat(result.getBody()).isEqualTo(1L);
+    }
+
+    @Test
+    @DisplayName("사용자는 없는 유저를 삭제할 수 없다")
+    void 사용자는_없는_유저를_삭제할_수_없다() {
+        //given
+        TestUserContainer container = TestUserContainer.builder()
+                .passwordEncoder(new TestPasswordEncoder())
+                .build();
+        //when
+        //then
+        assertThatThrownBy(() -> container.userController.delete(99999L))
+                .isInstanceOf(ResourceNotFoundException.class)
+                .hasMessage("User에서 ID 99999를 찾을 수 없습니다.");
     }
 }

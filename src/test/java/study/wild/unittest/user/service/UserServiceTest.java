@@ -68,4 +68,22 @@ class UserServiceTest {
                 .isInstanceOf(DuplicateResourceException.class)
                 .hasMessage("User에서 ID ambosing가 이미 존재합니다.");
     }
+
+    @Test
+    @DisplayName("유저를 삭제할 수 있다")
+    void 유저를_삭제할_수_있다() {
+        //given
+        User user = User.builder()
+                .id("ambosing")
+                .name("jiwon")
+                .password("password")
+                .build();
+        User savedUser = userRepository.save(user);
+        //when
+        Long deletedNo = userService.delete(savedUser.getNo());
+        //then
+        assertThat(deletedNo).isEqualTo(savedUser.getNo());
+        User user1 = userRepository.getByNo(savedUser.getNo());
+        assertThat(user1.getDeletedDate()).isNotNull();
+    }
 }

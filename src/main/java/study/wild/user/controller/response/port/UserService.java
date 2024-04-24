@@ -5,4 +5,7 @@ import study.wild.user.domain.UserCreate;
 
 public interface UserService {
     User create(UserCreate userCreate);
+
+    Long delete(Long no);
+
 }
